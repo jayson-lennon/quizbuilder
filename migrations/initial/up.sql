@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS quizzes (
   owner        uuid          REFERENCES users (user_id) NOT NULL,
   name         text          ,
   date_created timestamptz   NOT NULL,
-  open_time    timestamptz   NOT NULL,
-  close_time   timestamptz   ,
+  open_date    timestamptz   NOT NULL,
+  close_date   timestamptz   ,
   duration     interval      ,
   shortcode    text          NOT NULL
 );
@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS quiz_submissions (
   quiz_submission_id  uuid          PRIMARY KEY,
   identity            text          NOT NULL,
   quiz_id             uuid          REFERENCES quizzes (quiz_id) NOT NULL,
-  date_started        timestamptz   NOT NULL,
-  date_finished       timestamptz
+  start_date          timestamptz   NOT NULL,
+  finish_date         timestamptz
 );
 
 CREATE TABLE IF NOT EXISTS quiz_answers (
