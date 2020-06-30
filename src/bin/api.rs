@@ -1,12 +1,12 @@
-use actix_web::{web, App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 use anyhow::Result;
 use dotenv::dotenv;
-use serde::{Deserialize, Serialize};
 use sqlx::postgres::PgPool;
 use std::env;
 
 #[actix_rt::main]
 async fn main() -> Result<()> {
+    std::env::set_var("RUST_LOG", "actix_web=info");
     dotenv().ok();
     env_logger::init();
 
@@ -17,7 +17,9 @@ async fn main() -> Result<()> {
     let mut server = HttpServer::new(move || {
         App::new()
             .data(db_pool.clone())
-            .route("/api/test", web::get().to(libquiz::route::test::test))
+            .wrap(middleware::Logger::default())
+            .configure(libquiz::handlers::register)
+            .default_service(web::to(|| async { "404 " }))
     });
 
     let host = env::var("API_HOST").expect("API_HOST not set in env");

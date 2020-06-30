@@ -25,21 +25,21 @@ macro_rules! scalar_id {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct UserId(Uuid);
+pub struct UserId(pub Uuid);
 scalar_id!(UserId, "User ID");
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct QuizId(Uuid);
+pub struct QuizId(pub Uuid);
 scalar_id!(QuizId, "Quiz ID");
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct QuestionId(Uuid);
+pub struct QuestionId(pub Uuid);
 scalar_id!(QuestionId, "Question ID");
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct OptionId(Uuid);
+pub struct OptionId(pub Uuid);
 scalar_id!(OptionId, "Option ID");
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct SubmissionId(Uuid);
+pub struct SubmissionId(pub Uuid);
 scalar_id!(SubmissionId, "Submittion ID");
