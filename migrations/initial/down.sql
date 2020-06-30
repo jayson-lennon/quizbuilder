@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS users             CASCADE;
+DROP TABLE IF EXISTS quizzes           CASCADE;
+DROP TABLE IF EXISTS quiz_questions    CASCADE;
+DROP TABLE IF EXISTS quiz_options      CASCADE;
+DROP TABLE IF EXISTS quiz_submissions  CASCADE;
+DROP TABLE IF EXISTS quiz_answers      CASCADE;
