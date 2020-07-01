@@ -2,10 +2,10 @@ use juniper::{FieldError, FieldResult, RootNode};
 use sqlx::postgres::PgPool;
 use uuid::Uuid;
 
-use crate::{schema, types::id::QuizId};
+use crate::{db, schema, types::id::QuizId};
 
 pub struct Context {
-    pub dbpool: PgPool,
+    pub db_pool: PgPool,
 }
 
 impl juniper::Context for Context {}
@@ -20,11 +20,9 @@ impl QueryRoot {
     }
 
     #[graphql(description = "Get Single user reference by user ID")]
-    fn quiz(context: &Context, id: String) -> FieldResult<schema::Quiz> {
-        Ok(schema::Quiz {
-            quiz_id: QuizId(Uuid::new_v4()),
-            name: "sample".to_owned(),
-        })
+    fn quiz(context: &Context, id: QuizId) -> FieldResult<schema::Quiz> {
+        let quiz = smol::run(db::quiz::find_by_id(id, &context.db_pool))?;
+        Ok(quiz)
     }
 }
 
@@ -39,6 +37,6 @@ impl MutationRoot {
 
 pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
 
-pub fn create_schema() -> Schema {
+pub fn new() -> Schema {
     Schema::new(QueryRoot, MutationRoot)
 }

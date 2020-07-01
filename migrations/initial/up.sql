@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS quizzes (
   open_date    timestamptz   NOT NULL,
   close_date   timestamptz   ,
   duration     interval      ,
-  shortcode    text          NOT NULL
+  shortcode    text          NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS quiz_questions (

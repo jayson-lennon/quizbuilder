@@ -32,6 +32,12 @@ scalar_id!(UserId, "User ID");
 pub struct QuizId(pub Uuid);
 scalar_id!(QuizId, "Quiz ID");
 
+impl From<Uuid> for QuizId {
+    fn from(u: Uuid) -> Self {
+        QuizId(u)
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct QuestionId(pub Uuid);
 scalar_id!(QuestionId, "Question ID");

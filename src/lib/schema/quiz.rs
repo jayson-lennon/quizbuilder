@@ -5,11 +5,11 @@ use juniper::{GraphQLInputObject, GraphQLObject};
 #[graphql(description = "A sample quiz")]
 pub struct Quiz {
     pub quiz_id: QuizId,
-    pub name: String,
+    pub name: Option<String>,
 }
 
 #[derive(GraphQLInputObject)]
 #[graphql(description = "Quiz input")]
 pub struct QuizInput {
-    pub name: String,
+    pub name: Option<String>,
 }

@@ -1,33 +1,88 @@
-use actix_web::{middleware, web, App, HttpServer};
+#![feature(decl_macro, proc_macro_hygiene)]
+
+use rocket::config::Environment;
+use rocket::{response::content, State};
+
 use anyhow::Result;
 use dotenv::dotenv;
 use sqlx::postgres::PgPool;
 use std::env;
+use structopt::StructOpt;
 
-#[actix_rt::main]
-async fn main() -> Result<()> {
-    std::env::set_var("RUST_LOG", "actix_web=info");
+#[rocket::get("/graphiql")]
+fn graphiql() -> content::Html<String> {
+    juniper_rocket::graphiql_source("/graphql")
+}
+
+#[rocket::get("/graphql?<request>")]
+fn get_graphql_handler(
+    context: State<libquiz::schema::Context>,
+    request: juniper_rocket::GraphQLRequest,
+    schema: State<libquiz::schema::Schema>,
+) -> juniper_rocket::GraphQLResponse {
+    request.execute(&schema, &context)
+}
+
+#[rocket::post("/graphql", data = "<request>")]
+fn post_graphql_handler(
+    context: State<libquiz::schema::Context>,
+    request: juniper_rocket::GraphQLRequest,
+    schema: State<libquiz::schema::Schema>,
+) -> juniper_rocket::GraphQLResponse {
+    request.execute(&schema, &context)
+}
+
+/// A simple tool to test frontend code with faked API requests
+#[derive(StructOpt, Debug)]
+#[structopt(name = "spa-host")]
+struct Opt {
+    /// Port to use for hosting.
+    #[structopt(short = "p", long, default_value = "8000", env = "QUIZ_API_PORT")]
+    api_port: u16,
+
+    /// Bind address
+    #[structopt(short = "h", long, default_value = "localhost", env = "QUIZ_API_HOST")]
+    api_host: String,
+
+    /// Database connection pool size
+    #[structopt(long, default_value = "10", env = "QUIZ_DB_POOL_SIZE")]
+    db_pool_size: u32,
+
+    /// Database url
+    #[structopt(
+        short = "d",
+        long,
+        default_value = "postgres://postgres@localhost/quiz",
+        env = "QUIZ_DATABASE_URL"
+    )]
+    database_url: String,
+}
+
+fn main() {
     dotenv().ok();
-    env_logger::init();
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL not set in env");
+    let opt = Opt::from_args();
 
-    let db_pool = PgPool::builder().max_size(10).build(&database_url).await?;
+    let db_pool = smol::run(libquiz::db::new_pool(&opt.database_url, opt.db_pool_size))
+        .expect("failed to init db pool");
 
-    let mut server = HttpServer::new(move || {
-        App::new()
-            .data(db_pool.clone())
-            .wrap(middleware::Logger::default())
-            .configure(libquiz::handlers::register)
-            .default_service(web::to(|| async { "404 " }))
-    });
+    let rocket_config = rocket::Config::build(Environment::Development)
+        .port(opt.api_port)
+        .address(&opt.api_host)
+        .finalize()
+        .expect("Invalid server configuration");
 
-    let host = env::var("API_HOST").expect("API_HOST not set in env");
-    let port = env::var("API_PORT").expect("API_PORT not set in env");
+    let juniper_context = libquiz::schema::Context {
+        db_pool: db_pool.clone(),
+    };
 
-    server = server.bind(format!("{}:{}", host, port))?;
-
-    server.run().await?;
-
-    Ok(())
+    rocket::custom(rocket_config)
+        .manage(db_pool)
+        .manage(libquiz::schema::new())
+        .manage(juniper_context)
+        .mount(
+            "/",
+            rocket::routes![graphiql, get_graphql_handler, post_graphql_handler],
+        )
+        .launch();
 }
