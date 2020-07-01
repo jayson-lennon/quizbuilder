@@ -10,7 +10,7 @@ juniper::graphql_scalar!(Duration where Scalar = <S> {
     from_input_value(v: &InputValue) -> Option<Duration> {
         v.as_scalar_value::<String>()
         .and_then(|raw| i64::from_str_radix(raw, 10).ok())
-        .and_then(|ms| Some(Duration(chrono::Duration::milliseconds(ms))))
+        .map(|ms| Duration(chrono::Duration::milliseconds(ms)))
     }
 
     from_str<'a>(value: ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {

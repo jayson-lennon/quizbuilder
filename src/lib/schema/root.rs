@@ -1,6 +1,5 @@
-use juniper::{FieldError, FieldResult, RootNode};
+use juniper::{FieldResult, RootNode};
 use sqlx::postgres::PgPool;
-use uuid::Uuid;
 
 use crate::{db, schema, types::id::QuizId};
 

@@ -24,28 +24,37 @@ macro_rules! scalar_id {
     };
 }
 
+macro_rules! impl_from_uuid {
+    ($ty:ident) => {
+        impl From<Uuid> for $ty {
+            fn from(u: Uuid) -> Self {
+                $ty(u)
+            }
+        }
+    };
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct UserId(pub Uuid);
 scalar_id!(UserId, "User ID");
+impl_from_uuid!(UserId);
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct QuizId(pub Uuid);
 scalar_id!(QuizId, "Quiz ID");
-
-impl From<Uuid> for QuizId {
-    fn from(u: Uuid) -> Self {
-        QuizId(u)
-    }
-}
+impl_from_uuid!(QuizId);
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct QuestionId(pub Uuid);
 scalar_id!(QuestionId, "Question ID");
+impl_from_uuid!(QuestionId);
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct OptionId(pub Uuid);
 scalar_id!(OptionId, "Option ID");
+impl_from_uuid!(OptionId);
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct SubmissionId(pub Uuid);
 scalar_id!(SubmissionId, "Submittion ID");
+impl_from_uuid!(SubmissionId);

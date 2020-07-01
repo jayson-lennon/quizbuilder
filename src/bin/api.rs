@@ -1,36 +1,9 @@
 #![feature(decl_macro, proc_macro_hygiene)]
 
 use rocket::config::Environment;
-use rocket::{response::content, State};
 
-use anyhow::Result;
 use dotenv::dotenv;
-use sqlx::postgres::PgPool;
-use std::env;
 use structopt::StructOpt;
-
-#[rocket::get("/graphiql")]
-fn graphiql() -> content::Html<String> {
-    juniper_rocket::graphiql_source("/graphql")
-}
-
-#[rocket::get("/graphql?<request>")]
-fn get_graphql_handler(
-    context: State<libquiz::schema::Context>,
-    request: juniper_rocket::GraphQLRequest,
-    schema: State<libquiz::schema::Schema>,
-) -> juniper_rocket::GraphQLResponse {
-    request.execute(&schema, &context)
-}
-
-#[rocket::post("/graphql", data = "<request>")]
-fn post_graphql_handler(
-    context: State<libquiz::schema::Context>,
-    request: juniper_rocket::GraphQLRequest,
-    schema: State<libquiz::schema::Schema>,
-) -> juniper_rocket::GraphQLResponse {
-    request.execute(&schema, &context)
-}
 
 /// A simple tool to test frontend code with faked API requests
 #[derive(StructOpt, Debug)]
@@ -82,7 +55,11 @@ fn main() {
         .manage(juniper_context)
         .mount(
             "/",
-            rocket::routes![graphiql, get_graphql_handler, post_graphql_handler],
+            rocket::routes![
+                libquiz::route::graphql::graphiql,
+                libquiz::route::graphql::get,
+                libquiz::route::graphql::post,
+            ],
         )
         .launch();
 }
