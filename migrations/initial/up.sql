@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS quiz_answers (
   quiz_submission_id   uuid     REFERENCES quiz_submissions (quiz_submission_id) NOT NULL,
   quiz_question_id     uuid     REFERENCES quiz_questions (quiz_question_id) NOT NULL,
   quiz_option_id       uuid     REFERENCES quiz_options (quiz_option_id) NOT NULL,
-  PRIMARY KEY (quiz_submission_id, quiz_question_id, quiz_option_id)
+  PRIMARY KEY (quiz_submission_id, quiz_question_id)
 );
 
 CREATE TABLE IF NOT EXISTS app_config (
