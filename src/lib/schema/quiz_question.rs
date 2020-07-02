@@ -1,7 +1,7 @@
 use crate::types::id::{QuestionId, QuizId};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
-#[derive(juniper::GraphQLObject)]
+#[derive(GraphQLObject)]
 #[graphql(description = "A question")]
 pub struct QuizQuestion {
     pub quiz_question_id: QuestionId,

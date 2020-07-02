@@ -40,7 +40,7 @@ pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sql
     })
 }
 
-pub async fn new(quiz: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
+pub async fn new(input: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
     let id = Uuid::new_v4();
     let shortcode = gen_shortcode(&ShortCodeOptions::default());
     let date_created = Utc::now();
@@ -49,24 +49,24 @@ pub async fn new(quiz: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx:
           (quiz_id, owner, name, date_created, open_date, close_date, duration_sec, shortcode)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
         id,
-        quiz.owner.0,
-        quiz.name,
+        input.owner.0,
+        input.name,
         date_created,
-        quiz.open_date,
-        quiz.close_date,
-        quiz.duration.map(|d| d.0.num_seconds() as i32),
+        input.open_date,
+        input.close_date,
+        input.duration.map(|d| d.0.num_seconds() as i32),
         &shortcode,
     )
     .execute(conn)
     .await?;
     Ok(Quiz {
         quiz_id: id.into(),
-        name: quiz.name,
-        owner: quiz.owner,
+        name: input.name,
+        owner: input.owner,
         date_created: date_created,
-        open_date: quiz.open_date,
-        close_date: quiz.close_date,
-        duration: quiz.duration,
+        open_date: input.open_date,
+        close_date: input.close_date,
+        duration: input.duration,
         shortcode,
     })
 }
