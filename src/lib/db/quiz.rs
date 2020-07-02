@@ -116,6 +116,18 @@ async fn get_shortcode_options(conn: &mut PgConnection) -> Result<ShortCodeOptio
     })
 }
 
+pub async fn from_shortcode(shortcode: &str, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
+    let id = sqlx::query!(
+        "SELECT quiz_id FROM quizzes WHERE shortcode = $1",
+        shortcode
+    )
+    .fetch_one(&mut *conn)
+    .await?;
+
+    let id = id.quiz_id.into();
+    find_by_id(id, conn).await
+}
+
 #[cfg(test)]
 pub mod test {
     use crate::test::util;
