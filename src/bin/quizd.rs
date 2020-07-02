@@ -1,6 +1,7 @@
 #![feature(decl_macro, proc_macro_hygiene)]
 
 use rocket::config::Environment;
+use rocket_contrib::templates::Template;
 
 use dotenv::dotenv;
 use structopt::StructOpt;
@@ -63,13 +64,6 @@ fn main() {
         .manage(db_pool)
         .manage(libquiz::schema::new())
         .manage(juniper_context)
-        .mount(
-            "/",
-            rocket::routes![
-                libquiz::api::route::graphql::graphiql,
-                libquiz::api::route::graphql::get,
-                libquiz::api::route::graphql::post,
-            ],
-        )
+        .attach(Template::fairing())
         .launch();
 }

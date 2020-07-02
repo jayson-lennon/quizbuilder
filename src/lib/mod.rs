@@ -3,8 +3,9 @@
 pub mod types;
 
 pub mod db;
-pub mod route;
 pub mod schema;
+
+pub mod api;
 
 #[cfg(test)]
 pub mod test;
