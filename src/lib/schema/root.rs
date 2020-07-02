@@ -22,19 +22,22 @@ impl QueryRoot {
     }
 
     #[graphql(description = "Get a Quiz by ID")]
-    fn quiz(context: &Context, id: QuizId) -> FieldResult<schema::Quiz> {
+    fn quiz(context: &Context, quiz_id: QuizId) -> FieldResult<schema::Quiz> {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz::find_by_id(id, &mut conn))?)
     }
 
     #[graphql(description = "Get a Submission by ID")]
-    fn submission(context: &Context, id: SubmissionId) -> FieldResult<schema::QuizSubmission> {
+    fn submission(
+        context: &Context,
+        submission_id: SubmissionId,
+    ) -> FieldResult<schema::QuizSubmission> {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz_submission::find_by_id(id, &mut conn))?)
     }
 
     #[graphql(description = "Get all Submissions by Quiz ID")]
-    fn submissions(context: &Context, id: QuizId) -> FieldResult<schema::QuizSubmissions> {
+    fn submissions(context: &Context, quiz_id: QuizId) -> FieldResult<schema::QuizSubmissions> {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz_submission::get_all(id, &mut conn))?)
     }
