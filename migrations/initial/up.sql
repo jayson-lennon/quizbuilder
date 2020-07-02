@@ -1,21 +1,21 @@
 CREATE TABLE IF NOT EXISTS users (
-  user_id      uuid          PRIMARY KEY,
-  login        text          UNIQUE NOT NULL,
-  date_created timestamptz   NOT NULL,
-  password     text          ,
-  name         text          ,
-  last_login   timestamptz   NOT NULL
+  user_id        uuid          PRIMARY KEY,
+  login          text          UNIQUE NOT NULL,
+  date_created   timestamptz   NOT NULL,
+  password       text          ,
+  name           text          ,
+  last_login     timestamptz   NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS quizzes (
-  quiz_id      uuid          PRIMARY KEY,
-  owner        uuid          REFERENCES users (user_id) NOT NULL,
-  name         text          ,
-  date_created timestamptz   NOT NULL,
-  open_date    timestamptz   NOT NULL,
-  close_date   timestamptz   ,
-  duration     interval      ,
-  shortcode    text          NOT NULL UNIQUE
+  quiz_id        uuid          PRIMARY KEY,
+  owner          uuid          REFERENCES users (user_id) NOT NULL,
+  name           text          ,
+  date_created   timestamptz   NOT NULL,
+  open_date      timestamptz   NOT NULL,
+  close_date     timestamptz   ,
+  duration_sec   integer       ,
+  shortcode      text          NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS quiz_questions (
@@ -46,11 +46,6 @@ CREATE TABLE IF NOT EXISTS quiz_answers (
   quiz_question_id     uuid     REFERENCES quiz_questions (quiz_question_id) NOT NULL,
   quiz_option_id       uuid     REFERENCES quiz_options (quiz_option_id) NOT NULL,
   PRIMARY KEY (quiz_submission_id, quiz_question_id, quiz_option_id)
-);
-
-CREATE TABLE IF NOT EXISTS quiz_shortcodes (
-  shortcode     text   PRIMARY KEY,
-  quiz_id       uuid   REFERENCES quizzes (quiz_id)
 );
 
 CREATE TABLE IF NOT EXISTS app_config (
