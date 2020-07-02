@@ -1,4 +1,5 @@
 use crate::schema::{QuizQuestion, QuizQuestionInput};
+use crate::types::id::QuizId;
 use sqlx::postgres::PgConnection;
 use uuid::Uuid;
 
@@ -24,4 +25,26 @@ pub async fn new(
         question_data: input.question_data,
         position: input.position,
     })
+}
+
+pub async fn get_all(
+    quiz_id: QuizId,
+    conn: &mut PgConnection,
+) -> Result<Vec<QuizQuestion>, sqlx::Error> {
+    Ok(sqlx::query!(
+        "SELECT
+          quiz_question_id, question_data, position
+        FROM quiz_questions WHERE quiz_id = $1",
+        Uuid::from(quiz_id)
+    )
+    .fetch_all(conn)
+    .await?
+    .into_iter()
+    .map(|question| QuizQuestion {
+        quiz_question_id: question.quiz_question_id.into(),
+        quiz_id,
+        question_data: question.question_data,
+        position: question.position,
+    })
+    .collect::<Vec<_>>())
 }

@@ -1,3 +1,4 @@
+use crate::schema::QuizQuestion;
 use crate::types::id::{QuizId, UserId};
 use crate::types::time::Duration;
 use chrono::{DateTime, Utc};
@@ -14,6 +15,7 @@ pub struct Quiz {
     pub close_date: Option<DateTime<Utc>>,
     pub duration: Option<Duration>,
     pub shortcode: String,
+    pub questions: Vec<QuizQuestion>,
 }
 
 #[derive(GraphQLInputObject)]

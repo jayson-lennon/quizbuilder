@@ -6,7 +6,6 @@ use sqlx::postgres::PgConnection;
 use uuid::Uuid;
 
 pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
-    let id = id.0;
     let quiz = sqlx::query!(
         r#"SELECT
             quiz_id,
@@ -18,13 +17,13 @@ pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sql
             duration_sec,
             shortcode
         FROM quizzes WHERE quizzes.quiz_id = $1"#,
-        id
+        Uuid::from(id)
     )
-    .fetch_one(conn)
+    .fetch_one(&mut *conn)
     .await?;
 
     Ok(Quiz {
-        quiz_id: id.into(),
+        quiz_id: id,
         name: quiz.name,
         owner: quiz.owner.into(),
         date_created: quiz.date_created,
@@ -37,6 +36,7 @@ pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sql
             }
         },
         shortcode: quiz.shortcode,
+        questions: super::quiz_question::get_all(id, conn).await?,
     })
 }
 
@@ -68,6 +68,7 @@ pub async fn new(input: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx
         close_date: input.close_date,
         duration: input.duration,
         shortcode,
+        questions: vec![],
     })
 }
 
