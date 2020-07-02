@@ -1,5 +1,5 @@
-use crate::schema;
 use juniper_rocket::{GraphQLRequest, GraphQLResponse};
+use libquiz::schema;
 use rocket::{response::content::Html, State};
 
 #[rocket::get("/graphiql")]

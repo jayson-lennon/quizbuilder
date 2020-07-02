@@ -36,6 +36,8 @@ struct Opt {
 }
 
 fn main() {
+    use quizapi::route;
+
     dotenv().ok();
 
     let opt = Opt::from_args();
@@ -66,9 +68,9 @@ fn main() {
         .mount(
             "/",
             rocket::routes![
-                libquiz::api::route::graphql::graphiql,
-                libquiz::api::route::graphql::get,
-                libquiz::api::route::graphql::post,
+                route::graphql::graphiql,
+                route::graphql::get,
+                route::graphql::post,
             ],
         )
         .launch();
