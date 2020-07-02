@@ -47,3 +47,18 @@ CREATE TABLE IF NOT EXISTS quiz_answers (
   quiz_option_id       uuid     REFERENCES quiz_options (quiz_option_id) NOT NULL,
   PRIMARY KEY (quiz_submission_id, quiz_question_id, quiz_option_id)
 );
+
+CREATE TABLE IF NOT EXISTS quiz_shortcodes (
+  shortcode     text   PRIMARY KEY,
+  quiz_id       uuid   REFERENCES quizzes (quiz_id)
+);
+
+CREATE TABLE IF NOT EXISTS app_config (
+  app_key       text   NOT NULL,
+  app_value     text   NOT NULL
+);
+
+INSERT INTO app_config VALUES ('db_version',      '1');
+INSERT INTO app_config VALUES ('shortcode_len',   '8');
+INSERT INTO app_config VALUES ('shortcode_chars', 'abcdefghjkmnprtuwxyABCEFHJKLMNR234679');
+

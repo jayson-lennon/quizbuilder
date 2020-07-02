@@ -29,6 +29,10 @@ struct Opt {
         env = "QUIZ_DATABASE_URL"
     )]
     database_url: String,
+
+    /// Supress logging
+    #[structopt(long)]
+    silent: bool,
 }
 
 fn main() {
@@ -39,9 +43,15 @@ fn main() {
     let db_pool = smol::run(libquiz::db::new_pool(&opt.database_url, opt.db_pool_size))
         .expect("failed to init db pool");
 
+    let log_level = match opt.silent {
+        true => rocket::config::LoggingLevel::Off,
+        false => rocket::config::LoggingLevel::Normal,
+    };
+
     let rocket_config = rocket::Config::build(Environment::Development)
         .port(opt.api_port)
         .address(&opt.api_host)
+        .log_level(log_level)
         .finalize()
         .expect("Invalid server configuration");
 

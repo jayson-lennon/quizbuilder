@@ -20,7 +20,8 @@ impl QueryRoot {
 
     #[graphql(description = "Get Single user reference by user ID")]
     fn quiz(context: &Context, id: QuizId) -> FieldResult<schema::Quiz> {
-        let quiz = smol::run(db::quiz::find_by_id(id, &context.db_pool))?;
+        let mut conn = smol::run(context.db_pool.acquire())?;
+        let quiz = smol::run(db::quiz::find_by_id(id, &mut conn))?;
         Ok(quiz)
     }
 }
