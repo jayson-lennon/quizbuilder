@@ -1,13 +1,22 @@
-use crate::schema::Quiz;
+use crate::schema::{Quiz, QuizInput};
 use crate::types::id::QuizId;
+use crate::types::time::Duration;
+use chrono::Utc;
 use sqlx::postgres::PgConnection;
+use uuid::Uuid;
 
 pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
     let id = id.0;
     let quiz = sqlx::query!(
         r#"SELECT
-          quiz_id,
-          name
+            quiz_id,
+            owner,
+            name,
+            date_created,
+            open_date,
+            close_date,
+            duration_sec,
+            shortcode
         FROM quizzes WHERE quizzes.quiz_id = $1"#,
         id
     )
@@ -15,14 +24,65 @@ pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sql
     .await?;
 
     Ok(Quiz {
-        quiz_id: quiz.quiz_id.into(),
+        quiz_id: id.into(),
         name: quiz.name,
+        owner: quiz.owner.into(),
+        date_created: quiz.date_created,
+        open_date: quiz.open_date,
+        close_date: quiz.close_date,
+        duration: {
+            match quiz.duration_sec {
+                Some(d) => Some(Duration(chrono::Duration::seconds(d as i64))),
+                None => None,
+            }
+        },
+        shortcode: quiz.shortcode,
+    })
+}
+
+pub async fn new(quiz: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
+    let id = Uuid::new_v4();
+    let shortcode = gen_shortcode(&ShortCodeOptions::default());
+    let date_created = Utc::now();
+    let _ = sqlx::query!(
+        "INSERT INTO quizzes
+          (quiz_id, owner, name, date_created, open_date, close_date, duration_sec, shortcode)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+        id,
+        quiz.owner.0,
+        quiz.name,
+        date_created,
+        quiz.open_date,
+        quiz.close_date,
+        quiz.duration.map(|d| d.0.num_seconds() as i32),
+        &shortcode,
+    )
+    .execute(conn)
+    .await?;
+    Ok(Quiz {
+        quiz_id: id.into(),
+        name: quiz.name,
+        owner: quiz.owner,
+        date_created: date_created,
+        open_date: quiz.open_date,
+        close_date: quiz.close_date,
+        duration: quiz.duration,
+        shortcode,
     })
 }
 
 struct ShortCodeOptions {
     len: i32,
     allowed_chars: String,
+}
+
+impl Default for ShortCodeOptions {
+    fn default() -> Self {
+        ShortCodeOptions {
+            len: 8,
+            allowed_chars: crate::db::config::default::SHORTCODE_CHARS.to_owned(),
+        }
+    }
 }
 
 fn gen_shortcode(options: &ShortCodeOptions) -> String {
@@ -55,18 +115,6 @@ async fn get_shortcode_options(conn: &mut PgConnection) -> Result<ShortCodeOptio
     })
 }
 
-pub async fn save_shortcode(shortcode: &str, conn: &mut PgConnection) -> Result<(), sqlx::Error> {
-    // This will be an error if the shortcode already exists, so no need to
-    // return a value.
-    let _ = sqlx::query!(
-        "INSERT INTO quiz_shortcodes (shortcode) VALUES ($1)",
-        shortcode
-    )
-    .execute(conn)
-    .await?;
-    Ok(())
-}
-
 #[cfg(test)]
 pub mod test {
     use crate::test::util;
@@ -81,18 +129,5 @@ pub mod test {
         };
         let shortcode = quiz::gen_shortcode(&options);
         assert_eq!(&shortcode, "aaaaa");
-    }
-
-    #[test]
-    fn saves_shortcode() {
-        use uuid::Uuid;
-
-        let mut conn = util::new_connection();
-        let shortcode = Uuid::new_v4().to_string();
-        let added = smol::run(quiz::save_shortcode(&shortcode, &mut conn));
-        assert!(added.is_ok());
-
-        let added = smol::run(quiz::save_shortcode(&shortcode, &mut conn));
-        assert!(added.is_err());
     }
 }

@@ -29,8 +29,9 @@ pub struct MutationRoot;
 
 #[juniper::object(Context = Context)]
 impl MutationRoot {
-    fn create_quiz(context: &Context, quiz: schema::QuizInput) -> FieldResult<schema::Quiz> {
-        todo!();
+    fn create_quiz(context: &Context, quiz_input: schema::QuizInput) -> FieldResult<schema::Quiz> {
+        let mut conn = smol::run(context.db_pool.acquire())?;
+        Ok(smol::run(db::quiz::new(quiz_input, &mut conn))?)
     }
 
     fn create_quiz_question(
