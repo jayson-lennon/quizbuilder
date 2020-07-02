@@ -60,6 +60,14 @@ impl MutationRoot {
             &mut conn,
         ))?)
     }
+
+    fn create_quiz_answer(
+        context: &Context,
+        quiz_answer: schema::QuizAnswerInput,
+    ) -> FieldResult<schema::QuizAnswer> {
+        let mut conn = smol::run(context.db_pool.acquire())?;
+        Ok(smol::run(db::quiz_answer::new(quiz_answer, &mut conn))?)
+    }
 }
 
 pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
