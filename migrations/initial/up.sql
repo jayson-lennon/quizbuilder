@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS quiz_questions (
   quiz_question_id   uuid       PRIMARY KEY,
   quiz_id            uuid       REFERENCES quizzes (quiz_id) NOT NULL,
   question_data      text       NOT NULL,
-  position           integer    NOT NULL CHECK (position > 0)
+  position           integer    CHECK (position > 0)
 );
 
 CREATE TABLE IF NOT EXISTS quiz_options (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS quiz_options (
   quiz_question_id   uuid       REFERENCES quiz_questions (quiz_question_id) NOT NULL,
   option_data        text       NOT NULL,
   is_correct         boolean    NOT NULL,
-  position           integer    NOT NULL CHECK (position > 0)
+  position           integer    CHECK (position > 0)
 );
 
 CREATE TABLE IF NOT EXISTS quiz_submissions (
