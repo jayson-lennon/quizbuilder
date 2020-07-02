@@ -11,7 +11,7 @@ mod quiz_option;
 pub use quiz_option::{QuizOption, QuizOptionInput};
 
 mod quiz_submission;
-pub use quiz_submission::{QuizSubmission, QuizSubmissionInput};
+pub use quiz_submission::{QuizSubmission, QuizSubmissionInput, QuizSubmissions};
 
 mod quiz_answer;
 pub use quiz_answer::{QuizAnswer, QuizAnswerInput, QuizAnswerUpdate};

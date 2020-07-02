@@ -44,12 +44,13 @@ pub async fn get_all(
     let mut mapped_questions = vec![];
 
     for question in questions.into_iter() {
+        let question_id = question.quiz_question_id.into();
         let question = QuizQuestion {
-            quiz_question_id: question.quiz_question_id.into(),
+            quiz_question_id: question_id,
             quiz_id,
             question_data: question.question_data,
             position: question.position,
-            options: super::quiz_option::get_all(question.quiz_question_id.into(), conn).await?,
+            options: super::quiz_option::get_all(question_id, conn).await?,
         };
         mapped_questions.push(question);
     }

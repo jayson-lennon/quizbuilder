@@ -1,4 +1,5 @@
 use crate::schema::{QuizAnswer, QuizAnswerInput, QuizAnswerUpdate};
+use crate::types::id::SubmissionId;
 use sqlx::postgres::PgConnection;
 use uuid::Uuid;
 
@@ -63,4 +64,25 @@ pub async fn update(
         quiz_question_id: input.quiz_question_id,
         quiz_option_id: input.new_quiz_option_id,
     })
+}
+
+pub async fn get_all(
+    submission_id: SubmissionId,
+    conn: &mut PgConnection,
+) -> Result<Vec<QuizAnswer>, sqlx::Error> {
+    Ok(sqlx::query!(
+        "SELECT
+          quiz_question_id, quiz_option_id
+        FROM quiz_answers WHERE quiz_submission_id = $1",
+        Uuid::from(submission_id)
+    )
+    .fetch_all(conn)
+    .await?
+    .into_iter()
+    .map(|answer| QuizAnswer {
+        quiz_submission_id: submission_id,
+        quiz_question_id: answer.quiz_question_id.into(),
+        quiz_option_id: answer.quiz_option_id.into(),
+    })
+    .collect::<Vec<_>>())
 }
