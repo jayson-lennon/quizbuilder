@@ -1,5 +1,4 @@
 use crate::schema::{QuizQuestion, QuizQuestionInput};
-use crate::types::id::{QuestionId, QuizId};
 use sqlx::postgres::PgConnection;
 use uuid::Uuid;
 

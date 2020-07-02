@@ -9,3 +9,6 @@ pub use quiz_question::{QuizQuestion, QuizQuestionInput};
 
 mod quiz_option;
 pub use quiz_option::{QuizOption, QuizOptionInput};
+
+mod quiz_submission;
+pub use quiz_submission::{QuizSubmission, QuizSubmissionInput};
