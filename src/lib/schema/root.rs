@@ -13,16 +13,15 @@ pub struct QueryRoot;
 
 #[juniper::object(Context = Context)]
 impl QueryRoot {
-    #[graphql(description = "List of all users")]
+    #[graphql(description = "Get all quizzes")]
     fn quizzes(context: &Context) -> FieldResult<Vec<schema::Quiz>> {
         todo!();
     }
 
-    #[graphql(description = "Get Single user reference by user ID")]
+    #[graphql(description = "Get a Quiz by ID")]
     fn quiz(context: &Context, id: QuizId) -> FieldResult<schema::Quiz> {
         let mut conn = smol::run(context.db_pool.acquire())?;
-        let quiz = smol::run(db::quiz::find_by_id(id, &mut conn))?;
-        Ok(quiz)
+        Ok(smol::run(db::quiz::find_by_id(id, &mut conn))?)
     }
 }
 
@@ -32,6 +31,14 @@ pub struct MutationRoot;
 impl MutationRoot {
     fn create_quiz(context: &Context, quiz: schema::QuizInput) -> FieldResult<schema::Quiz> {
         todo!();
+    }
+
+    fn create_quiz_question(
+        context: &Context,
+        quiz_question: schema::QuizQuestionInput,
+    ) -> FieldResult<schema::QuizQuestion> {
+        let mut conn = smol::run(context.db_pool.acquire())?;
+        Ok(smol::run(db::quiz_question::new(quiz_question, &mut conn))?)
     }
 }
 

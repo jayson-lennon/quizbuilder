@@ -1,7 +1,6 @@
 use crate::schema::Quiz;
 use crate::types::id::QuizId;
 use sqlx::postgres::PgConnection;
-use std::borrow::BorrowMut;
 
 pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
     let id = id.0;

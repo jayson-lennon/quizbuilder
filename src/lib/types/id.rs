@@ -31,6 +31,12 @@ macro_rules! impl_from_uuid {
                 $ty(u)
             }
         }
+
+        impl From<$ty> for Uuid {
+            fn from(id: $ty) -> Self {
+                id.0
+            }
+        }
     };
 }
 
