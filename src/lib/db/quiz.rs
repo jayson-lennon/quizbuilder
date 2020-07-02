@@ -90,10 +90,10 @@ pub mod test {
 
         let mut conn = util::new_connection();
         let shortcode = Uuid::new_v4().to_string();
-        let added = smol::run(quiz::save_shortcode(&shortcode, &mut db));
+        let added = smol::run(quiz::save_shortcode(&shortcode, &mut conn));
         assert!(added.is_ok());
 
-        let added = smol::run(quiz::save_shortcode(&shortcode, &mut db));
+        let added = smol::run(quiz::save_shortcode(&shortcode, &mut conn));
         assert!(added.is_err());
     }
 }
