@@ -24,3 +24,4 @@ structopt = "0.3.15"
 rand = "^0.7"
 handlebars = "^3.2"
 libquiz = { path = "../libquiz" }
+reqwest = { version = "^0.10", features = ["blocking"] }

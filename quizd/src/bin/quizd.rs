@@ -2,6 +2,7 @@
 
 use dotenv::dotenv;
 use handlebars::Handlebars;
+use quizd::AppState;
 use rocket::config::Environment;
 use std::error::Error;
 use std::path::PathBuf;
@@ -11,6 +12,15 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "spa-host")]
 struct Opt {
+    /// URL for QuizApi
+    #[structopt(
+        short = "a",
+        long = "api",
+        default_value = "http://localhost:8001/graphql",
+        env = "QUIZ_API_URL"
+    )]
+    api_url: String,
+
     /// Port to use for hosting.
     #[structopt(short = "p", long, default_value = "8000", env = "QUIZ_WEB_PORT")]
     port: u16,
@@ -36,12 +46,13 @@ struct Opt {
 fn init_template_engine(directory: PathBuf) -> Result<Handlebars<'static>, Box<dyn Error>> {
     let mut engine = Handlebars::new();
     engine.register_template_file("index", directory.join("index.hbs"))?;
-    engine.register_template_file("derp", directory.join("derp.hbs"))?;
+    engine.register_helper("print-obj", Box::new(quizd::handlebars_helpers::ObjPrinter));
+    engine.set_strict_mode(true);
     Ok(engine)
 }
 
 fn main() {
-    use quizd::route;
+    use quizd::routes;
 
     dotenv().ok();
 
@@ -55,6 +66,11 @@ fn main() {
     let template_engine =
         init_template_engine(opt.templates).expect("failed to init template engine");
 
+    let app_state = AppState {
+        api_url: opt.api_url,
+        template_engine,
+    };
+
     let rocket_config = rocket::Config::build(Environment::Development)
         .port(opt.port)
         .address(&opt.host)
@@ -63,7 +79,7 @@ fn main() {
         .expect("Invalid server configuration");
 
     rocket::custom(rocket_config)
-        .manage(template_engine)
-        .mount("/", rocket::routes![route::quiz::get])
+        .manage(app_state)
+        .mount("/", rocket::routes![routes::quiz::get])
         .launch();
 }
