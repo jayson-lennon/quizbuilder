@@ -22,9 +22,3 @@ pub struct QuizSubmissionInput {
     pub start_date: DateTime<Utc>,
     pub finish_date: Option<DateTime<Utc>>,
 }
-
-#[derive(GraphQLObject)]
-#[graphql(description = "A submission")]
-pub struct QuizSubmissions {
-    pub submissions: Vec<QuizSubmission>,
-}

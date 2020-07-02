@@ -1,4 +1,4 @@
-use crate::schema::{QuizSubmission, QuizSubmissionInput, QuizSubmissions};
+use crate::schema::{QuizSubmission, QuizSubmissionInput};
 use crate::types::id::{QuizId, SubmissionId};
 use sqlx::postgres::PgConnection;
 use uuid::Uuid;
@@ -57,7 +57,7 @@ pub async fn find_by_id(
 pub async fn get_all(
     quiz_id: QuizId,
     conn: &mut PgConnection,
-) -> Result<QuizSubmissions, sqlx::Error> {
+) -> Result<Vec<QuizSubmission>, sqlx::Error> {
     let submissions = sqlx::query!(
         "SELECT
           identity, quiz_submission_id, start_date, finish_date
@@ -82,7 +82,5 @@ pub async fn get_all(
         mapped_submissions.push(sub);
     }
 
-    Ok(QuizSubmissions {
-        submissions: mapped_submissions,
-    })
+    Ok(mapped_submissions)
 }

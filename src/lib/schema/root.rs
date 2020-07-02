@@ -16,11 +16,6 @@ pub struct QueryRoot;
 
 #[juniper::object(Context = Context)]
 impl QueryRoot {
-    #[graphql(description = "Get all quizzes")]
-    fn quizzes(context: &Context) -> FieldResult<Vec<schema::Quiz>> {
-        todo!();
-    }
-
     #[graphql(description = "Get a Quiz by ID")]
     fn quiz(context: &Context, quiz_id: QuizId) -> FieldResult<schema::Quiz> {
         let mut conn = smol::run(context.db_pool.acquire())?;
@@ -40,7 +35,7 @@ impl QueryRoot {
     }
 
     #[graphql(description = "Get all Submissions by Quiz ID")]
-    fn submissions(context: &Context, quiz_id: QuizId) -> FieldResult<schema::QuizSubmissions> {
+    fn submissions(context: &Context, quiz_id: QuizId) -> FieldResult<Vec<schema::QuizSubmission>> {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz_submission::get_all(quiz_id, &mut conn))?)
     }
