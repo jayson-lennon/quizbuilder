@@ -68,6 +68,16 @@ impl MutationRoot {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz_answer::new(quiz_answer, &mut conn))?)
     }
+
+    fn change_quiz_answer(
+        context: &Context,
+        updated_answer: schema::QuizAnswerUpdate,
+    ) -> FieldResult<schema::QuizAnswer> {
+        let mut trans = smol::run(context.db_pool.begin())?;
+        let answer = smol::run(db::quiz_answer::update(updated_answer, &mut trans))?;
+        let _ = smol::run(trans.commit())?;
+        Ok(answer)
+    }
 }
 
 pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
