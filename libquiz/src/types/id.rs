@@ -1,29 +1,6 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-macro_rules! scalar_id {
-    ($ty:ident, $description:expr) => {
-        juniper::graphql_scalar!($ty where Scalar = <S> {
-            description: $description
-
-            resolve(&self) -> juniper::Value {
-                juniper::Value::scalar(format!("{}", self.0))
-            }
-
-            from_input_value(v: &InputValue) -> Option<$ty> {
-                v.as_scalar_value::<String>()
-                .and_then(|s| Uuid::parse_str(s).ok())
-                .and_then(|id| Some($ty(id)))
-            }
-
-            from_str<'a>(value: ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
-                <String as juniper::ParseScalarValue<S>>::from_str(value)
-            }
-        });
-
-    };
-}
-
 macro_rules! impl_from_uuid {
     ($ty:ident) => {
         impl From<Uuid> for $ty {
@@ -42,25 +19,120 @@ macro_rules! impl_from_uuid {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct UserId(pub Uuid);
-scalar_id!(UserId, "User ID");
 impl_from_uuid!(UserId);
+
+#[juniper::graphql_scalar(name = "UserId", description = "User ID")]
+impl<S> GraphQLScalar for UserId
+where
+    S: juniper::ScalarValue,
+{
+    fn resolve(&self) -> juniper::Value {
+        juniper::Value::scalar(format!("{}", self.0))
+    }
+
+    fn from_input_value(v: &InputValue) -> Option<UserId> {
+        v.as_string_value()
+            .and_then(|s| Uuid::parse_str(s).ok())
+            .and_then(|id| Some(UserId(id)))
+    }
+
+    fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
+        <String as juniper::ParseScalarValue<S>>::from_str(value)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct QuizId(pub Uuid);
-scalar_id!(QuizId, "Quiz ID");
 impl_from_uuid!(QuizId);
+
+#[juniper::graphql_scalar(name = "QuizId", description = "Quiz ID")]
+impl<S> GraphQLScalar for QuizId
+where
+    S: juniper::ScalarValue,
+{
+    fn resolve(&self) -> juniper::Value {
+        juniper::Value::scalar(format!("{}", self.0))
+    }
+
+    fn from_input_value(v: &InputValue) -> Option<QuizId> {
+        v.as_string_value()
+            .and_then(|s| Uuid::parse_str(s).ok())
+            .and_then(|id| Some(QuizId(id)))
+    }
+
+    fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
+        <String as juniper::ParseScalarValue<S>>::from_str(value)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct QuestionId(pub Uuid);
-scalar_id!(QuestionId, "Question ID");
 impl_from_uuid!(QuestionId);
+
+#[juniper::graphql_scalar(name = "QuestionId", description = "Question ID")]
+impl<S> GraphQLScalar for QuestionId
+where
+    S: juniper::ScalarValue,
+{
+    fn resolve(&self) -> juniper::Value {
+        juniper::Value::scalar(format!("{}", self.0))
+    }
+
+    fn from_input_value(v: &InputValue) -> Option<QuestionId> {
+        v.as_string_value()
+            .and_then(|s| Uuid::parse_str(s).ok())
+            .and_then(|id| Some(QuestionId(id)))
+    }
+
+    fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
+        <String as juniper::ParseScalarValue<S>>::from_str(value)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct OptionId(pub Uuid);
-scalar_id!(OptionId, "Option ID");
 impl_from_uuid!(OptionId);
+
+#[juniper::graphql_scalar(name = "OptionID", description = "Option ID")]
+impl<S> GraphQLScalar for OptionId
+where
+    S: juniper::ScalarValue,
+{
+    fn resolve(&self) -> juniper::Value {
+        juniper::Value::scalar(format!("{}", self.0))
+    }
+
+    fn from_input_value(v: &InputValue) -> Option<OptionId> {
+        v.as_string_value()
+            .and_then(|s| Uuid::parse_str(s).ok())
+            .and_then(|id| Some(OptionId(id)))
+    }
+
+    fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
+        <String as juniper::ParseScalarValue<S>>::from_str(value)
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct SubmissionId(pub Uuid);
-scalar_id!(SubmissionId, "Submittion ID");
 impl_from_uuid!(SubmissionId);
+
+#[juniper::graphql_scalar(name = "SubmissionId", description = "Submission ID")]
+impl<S> GraphQLScalar for SubmissionId
+where
+    S: juniper::ScalarValue,
+{
+    fn resolve(&self) -> juniper::Value {
+        juniper::Value::scalar(format!("{}", self.0))
+    }
+
+    fn from_input_value(v: &InputValue) -> Option<SubmissionId> {
+        v.as_string_value()
+            .and_then(|s| Uuid::parse_str(s).ok())
+            .and_then(|id| Some(SubmissionId(id)))
+    }
+
+    fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
+        <String as juniper::ParseScalarValue<S>>::from_str(value)
+    }
+}

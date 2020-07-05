@@ -1,4 +1,4 @@
-use juniper::{FieldResult, RootNode};
+use juniper::{EmptySubscription, FieldError, FieldResult, RootNode};
 use sqlx::postgres::PgPool;
 
 use crate::{
@@ -14,10 +14,10 @@ impl juniper::Context for Context {}
 
 pub struct QueryRoot;
 
-#[juniper::object(Context = Context)]
+#[juniper::graphql_object(Context = Context)]
 impl QueryRoot {
     #[graphql(description = "Get a Quiz by ID")]
-    fn quiz(context: &Context, quiz_id: QuizId) -> FieldResult<schema::Quiz> {
+    fn quiz(context: &Context, quiz_id: QuizId) -> Result<schema::Quiz, FieldError> {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz::find_by_id(quiz_id, &mut conn))?)
     }
@@ -49,7 +49,7 @@ impl QueryRoot {
 
 pub struct MutationRoot;
 
-#[juniper::object(Context = Context)]
+#[juniper::graphql_object(Context = Context)]
 impl MutationRoot {
     fn create_quiz(context: &Context, quiz_input: schema::QuizInput) -> FieldResult<schema::Quiz> {
         let mut conn = smol::run(context.db_pool.acquire())?;
@@ -102,8 +102,8 @@ impl MutationRoot {
     }
 }
 
-pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
+pub type Schema = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription<Context>>;
 
 pub fn new() -> Schema {
-    Schema::new(QueryRoot, MutationRoot)
+    Schema::new(QueryRoot, MutationRoot, EmptySubscription::<Context>::new())
 }

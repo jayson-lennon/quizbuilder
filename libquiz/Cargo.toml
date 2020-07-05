@@ -17,8 +17,12 @@ env_logger = "^0.7"
 chrono = { version = "0.4.11", features = ["serde"] }
 uuid = { version = "^0.8", features = ["serde", "v4"] }
 rocket = "^0.4"
-juniper = "^0.14"
-juniper_rocket = "^0.5"
+
+juniper_codegen = { git = "https://github.com/graphql-rust/juniper" }
+juniper = { git = "https://github.com/graphql-rust/juniper" }
+
+#juniper = "^0.14"
+#juniper_rocket = "^0.5"
 smol = "^0.1"
 structopt = "0.3.15"
 rand = "^0.7"

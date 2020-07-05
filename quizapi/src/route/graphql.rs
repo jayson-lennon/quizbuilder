@@ -4,7 +4,7 @@ use rocket::{response::content::Html, State};
 
 #[rocket::get("/graphiql")]
 pub fn graphiql() -> Html<String> {
-    juniper_rocket::graphiql_source("/graphql")
+    juniper_rocket::graphiql_source("/graphql", None)
 }
 
 #[rocket::get("/graphql?<request>")]
@@ -13,7 +13,8 @@ pub fn get(
     request: GraphQLRequest,
     schema: State<schema::Schema>,
 ) -> GraphQLResponse {
-    request.execute(&schema, &context)
+    let schema = schema.inner();
+    request.execute_sync(schema, &context)
 }
 
 #[rocket::post("/graphql", data = "<request>")]
@@ -22,5 +23,6 @@ pub fn post(
     request: GraphQLRequest,
     schema: State<schema::Schema>,
 ) -> GraphQLResponse {
-    request.execute(&schema, &context)
+    let schema = schema.inner();
+    request.execute_sync(schema, &context)
 }
