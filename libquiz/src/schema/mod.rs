@@ -8,7 +8,7 @@ mod quiz_question;
 pub use quiz_question::{QuizQuestion, QuizQuestionInput};
 
 mod quiz_option;
-pub use quiz_option::{QuizOption, QuizOptionInput};
+pub use quiz_option::{QuizOption, QuizOptionInput, QuizOptionType};
 
 mod quiz_submission;
 pub use quiz_submission::{QuizSubmission, QuizSubmissionInput};

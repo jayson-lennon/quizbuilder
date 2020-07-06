@@ -8,9 +8,22 @@
 </head>
 
 <body>
-    new page
-    {{ print-obj data }}
-    herp
+    <form>
+        <input type="hidden" value="{{quizId}}" name="quizId">
+        <label>Open Date: {{openDate}}</label>
+        <label>Close Date: {{closeDate}}</label>
+        <label>Duration: {{duration}}</label>
+        {{#each questions as |question| ~}}
+        <input type="hidden" value={{quizQuestionId}} name="quizQuestionId">
+        <label>Question {{@index}}:</label>
+        <p>{{questionData}}</p>
+        <ul>
+            {{#each options as |option| ~}}
+            <li></li>
+            {{/each}}
+        </ul>
+        {{/each}}
+    </form>
 </body>
 
 </html>

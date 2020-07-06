@@ -10,18 +10,13 @@ edition = "2018"
 serde = { version = "^1.0", features = ["derive"] }
 serde_json = "^1.0"
 sqlx = { version = "0.3", default-features = false, features = ["runtime-async-std", "macros", "postgres", "chrono", "uuid"] }
-anyhow = "^1.0"
 thiserror = "^1.0"
 dotenv = "^0.15"
 env_logger = "^0.7"
 chrono = { version = "0.4.11", features = ["serde"] }
 uuid = { version = "^0.8", features = ["serde", "v4"] }
-
 juniper_codegen = { git = "https://github.com/graphql-rust/juniper" }
 juniper = { git = "https://github.com/graphql-rust/juniper" }
-
-#juniper = "^0.14"
-#juniper_rocket = "^0.5"
 smol = "^0.1"
 structopt = "0.3.15"
 rand = "^0.7"

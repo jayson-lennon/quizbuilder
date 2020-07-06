@@ -7,6 +7,11 @@ pub fn graphiql() -> Html<String> {
     juniper_rocket::graphiql_source("/graphql", None)
 }
 
+#[rocket::get("/graphql_playground")]
+pub fn graphql_playground() -> Html<String> {
+    juniper_rocket::playground_source("/graphql", None)
+}
+
 #[rocket::get("/graphql?<request>")]
 pub fn get(
     context: State<schema::Context>,

@@ -69,6 +69,7 @@ fn main() {
             "/",
             rocket::routes![
                 route::graphql::graphiql,
+                route::graphql::graphql_playground,
                 route::graphql::get,
                 route::graphql::post,
             ],

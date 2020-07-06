@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS quiz_options (
   quiz_question_id   uuid       REFERENCES quiz_questions (quiz_question_id) NOT NULL,
   option_data        text       NOT NULL,
   is_correct         boolean    NOT NULL,
-  position           integer    CHECK (position > 0)
+  position           integer    CHECK (position > 0),
+  option_type        integer    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS quiz_submissions (

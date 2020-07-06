@@ -16,7 +16,7 @@ pub fn get(shortcode: String, app_state: State<AppState>) -> Result<Html<String>
     }
 
     let api_query = {
-        let graphql_query = r#""{ quizFromShortcode(shortcode:\"_SHORTCODE_\") { quizId, dateCreated, openDate, closeDate, duration, questions { quizQuestionId, quizId, position, questionData, options { quizOptionId, optionData, position } } } }""#;
+        let graphql_query = r#""{ quizFromShortcode(shortcode:\"_SHORTCODE_\") { quizId, openDate, closeDate, duration, questions { quizQuestionId, position, questionData, options { quizOptionId, optionData, position } } } }""#;
         let graphql_query = graphql_query.replace("_SHORTCODE_", &shortcode);
         let json_request = r#"{
                 "query": _GRAPHQL_QUERY_,
@@ -25,9 +25,9 @@ pub fn get(shortcode: String, app_state: State<AppState>) -> Result<Html<String>
         json_request.replace("_GRAPHQL_QUERY_", &graphql_query)
     };
 
-    // TODO: Cache result of quiz response.
-    // NOTE: Quizzes are immutable once they have been opened, so it is ok to cache
-    //       a quiz for any amount of time.
+    // TODO: Cache result of quiz API response.
+    // NOTE: Quizzes are immutable once they have been opened. However,
+    //       the "closeDate" of a quiz should be respected.
     let res = client
         .post(&app_state.api_url)
         .body(api_query)
@@ -36,6 +36,10 @@ pub fn get(shortcode: String, app_state: State<AppState>) -> Result<Html<String>
         .text()?;
 
     let res: serde_json::Value = serde_json::from_str(&res)?;
-    let template = app_state.template_engine.render("index", &res)?;
+    println!("{:#?}", res);
+    println!("{:#?}", res["data"]["quizFromShortcode"]);
+    let template = app_state
+        .template_engine
+        .render("index", &res["data"]["quizFromShortcode"])?;
     Ok(Html(template))
 }
