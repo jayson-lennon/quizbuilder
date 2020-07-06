@@ -9,7 +9,7 @@ impl HelperDef for ObjPrinter {
         h: &Helper,
         _: &Handlebars,
         _: &Context,
-        rc: &mut RenderContext,
+        _: &mut RenderContext,
         out: &mut dyn Output,
     ) -> HelperResult {
         let param = h.param(0).unwrap();
