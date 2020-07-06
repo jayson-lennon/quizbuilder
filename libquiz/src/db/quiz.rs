@@ -72,7 +72,7 @@ pub async fn new(input: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx
     })
 }
 
-struct ShortCodeOptions {
+pub struct ShortCodeOptions {
     len: i32,
     allowed_chars: String,
 }
@@ -126,6 +126,15 @@ pub async fn from_shortcode(shortcode: &str, conn: &mut PgConnection) -> Result<
 
     let id = id.quiz_id.into();
     find_by_id(id, conn).await
+}
+
+pub fn validate_shortcode(shortcode: &str, options: &ShortCodeOptions) -> bool {
+    for ch in shortcode.chars() {
+        if !options.allowed_chars.chars().any(|c| c == ch) {
+            return false;
+        }
+    }
+    true
 }
 
 #[cfg(test)]

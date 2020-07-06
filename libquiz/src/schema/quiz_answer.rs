@@ -1,7 +1,7 @@
 use crate::types::id::{OptionId, QuestionId, SubmissionId};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Debug)]
 #[graphql(description = "An answer")]
 pub struct QuizAnswer {
     pub quiz_submission_id: SubmissionId,
@@ -9,7 +9,7 @@ pub struct QuizAnswer {
     pub quiz_option_id: OptionId,
 }
 
-#[derive(GraphQLInputObject)]
+#[derive(GraphQLInputObject, Debug)]
 #[graphql(description = "A new answer")]
 pub struct QuizAnswerInput {
     pub quiz_submission_id: SubmissionId,
@@ -17,7 +17,7 @@ pub struct QuizAnswerInput {
     pub quiz_option_id: OptionId,
 }
 
-#[derive(GraphQLInputObject)]
+#[derive(GraphQLInputObject, Debug)]
 #[graphql(description = "An updated answer")]
 pub struct QuizAnswerUpdate {
     pub quiz_submission_id: SubmissionId,

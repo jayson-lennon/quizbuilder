@@ -16,7 +16,6 @@ dotenv = "^0.15"
 env_logger = "^0.7"
 chrono = { version = "0.4.11", features = ["serde"] }
 uuid = { version = "^0.8", features = ["serde", "v4"] }
-rocket = "^0.4"
 
 juniper_codegen = { git = "https://github.com/graphql-rust/juniper" }
 juniper = { git = "https://github.com/graphql-rust/juniper" }

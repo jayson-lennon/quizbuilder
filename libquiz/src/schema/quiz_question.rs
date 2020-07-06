@@ -2,7 +2,7 @@ use crate::schema::QuizOption;
 use crate::types::id::{QuestionId, QuizId};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Debug)]
 #[graphql(description = "A question")]
 pub struct QuizQuestion {
     pub quiz_question_id: QuestionId,
@@ -12,7 +12,7 @@ pub struct QuizQuestion {
     pub options: Vec<QuizOption>,
 }
 
-#[derive(GraphQLInputObject)]
+#[derive(GraphQLInputObject, Debug)]
 #[graphql(description = "New question")]
 pub struct QuizQuestionInput {
     pub quiz_id: QuizId,

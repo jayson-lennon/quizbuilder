@@ -1,3 +1,8 @@
+use rocket::{
+    http::Status,
+    request::Request,
+    response::{self, Responder, Response},
+};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -10,6 +15,17 @@ pub enum QuizdError {
 
     #[error("deserialization error: {0}")]
     DeserializationError(String),
+
+    #[error("shortcode validation error")]
+    InvalidShortcode,
+}
+
+impl<'r> Responder<'r> for QuizdError {
+    fn respond_to(self, _: &Request) -> response::Result<'r> {
+        // TODO: better logging.
+        error!("{}", self);
+        Response::build().status(Status::NotFound).ok()
+    }
 }
 
 impl From<reqwest::Error> for QuizdError {

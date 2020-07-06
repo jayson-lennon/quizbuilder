@@ -1,4 +1,4 @@
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Duration(pub chrono::Duration);
 
 #[juniper::graphql_scalar(name = "Duration", description = "Duration")]

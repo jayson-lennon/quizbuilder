@@ -1,7 +1,7 @@
 use crate::types::id::{OptionId, QuestionId};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Debug)]
 #[graphql(description = "An option")]
 pub struct QuizOption {
     pub quiz_option_id: OptionId,
@@ -11,7 +11,7 @@ pub struct QuizOption {
     pub position: Option<i32>,
 }
 
-#[derive(GraphQLInputObject)]
+#[derive(GraphQLInputObject, Debug)]
 #[graphql(description = "New Option")]
 pub struct QuizOptionInput {
     pub quiz_question_id: QuestionId,

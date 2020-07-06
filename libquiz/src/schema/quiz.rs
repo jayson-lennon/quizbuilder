@@ -4,7 +4,7 @@ use crate::types::time::Duration;
 use chrono::{DateTime, Utc};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Debug)]
 #[graphql(description = "A quiz")]
 pub struct Quiz {
     pub quiz_id: QuizId,
@@ -18,7 +18,7 @@ pub struct Quiz {
     pub questions: Vec<QuizQuestion>,
 }
 
-#[derive(GraphQLInputObject)]
+#[derive(GraphQLInputObject, Debug)]
 #[graphql(description = "Quiz input")]
 pub struct QuizInput {
     pub name: Option<String>,

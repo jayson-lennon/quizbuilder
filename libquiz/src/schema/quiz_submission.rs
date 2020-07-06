@@ -3,7 +3,7 @@ use crate::types::id::{QuizId, SubmissionId};
 use chrono::{DateTime, Utc};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Debug)]
 #[graphql(description = "A submission")]
 pub struct QuizSubmission {
     pub quiz_submission_id: SubmissionId,
@@ -14,7 +14,7 @@ pub struct QuizSubmission {
     pub answers: Vec<QuizAnswer>,
 }
 
-#[derive(GraphQLInputObject)]
+#[derive(GraphQLInputObject, Debug)]
 #[graphql(description = "New submission")]
 pub struct QuizSubmissionInput {
     pub identity: String,
