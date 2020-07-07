@@ -1,4 +1,5 @@
 use crate::{AppState, QuizdError};
+use chrono::{DateTime, SecondsFormat, Utc};
 use rocket::{
     request::{FormItems, FromForm, LenientForm},
     response::content::Html,
@@ -66,7 +67,7 @@ impl<'f> FromForm<'f> for QuizFormSubmission {
     // In practice, we'd use a more descriptive error type.
     type Error = ();
 
-    fn from_form(items: &mut FormItems<'f>, strict: bool) -> Result<QuizFormSubmission, ()> {
+    fn from_form(items: &mut FormItems<'f>, _: bool) -> Result<QuizFormSubmission, ()> {
         use std::str::FromStr;
 
         let mut quiz_id = None;
@@ -110,7 +111,72 @@ impl<'f> FromForm<'f> for QuizFormSubmission {
     }
 }
 
+// TODO: Make graphql query builder/macro.
+fn create_mutation_query(
+    identity: &str,
+    start_time: DateTime<Utc>,
+    finish_time: DateTime<Utc>,
+    form: QuizFormSubmission,
+) -> String {
+    let compiled_answers = {
+        let mut answers = vec![];
+        let answer_chunk =
+            r#"{quizQuestionId: \"_QUIZ_QUESTION_ID_\", quizOptionId: \"_QUIZ_OPTION_ID_\"}"#;
+        for answer in form.answers.iter() {
+            let formatted_answer =
+                answer_chunk.replace("_QUIZ_QUESTION_ID_", &answer.question_id.to_string());
+            let formatted_answer =
+                formatted_answer.replace("_QUIZ_OPTION_ID_", &answer.option_id.to_string());
+            answers.push(formatted_answer);
+        }
+        answers.join(",")
+    };
+
+    let mutation_query = r#"mutation { createQuizSubmission(quizSubmission: {identity: \"_IDENTITY_\", quizId: \"_QUIZ_ID_\", startDate: \"_START_TIME_\", finishDate: \"_FINISH_TIME_\", answers: [_ANSWERS_]}) { quizSubmissionId }}"#;
+    let mutation_query = mutation_query.replace("_IDENTITY_", identity);
+    let mutation_query = mutation_query.replace("_QUIZ_ID_", &form.quiz_id.to_string());
+    let mutation_query = mutation_query.replace(
+        "_START_TIME_",
+        &format!(
+            "{}",
+            start_time.to_rfc3339_opts(SecondsFormat::Millis, true)
+        ),
+    );
+    let mutation_query = mutation_query.replace(
+        "_FINISH_TIME_",
+        &format!(
+            "{}",
+            finish_time.to_rfc3339_opts(SecondsFormat::Millis, true)
+        ),
+    );
+    let mutation_query = mutation_query.replace("_ANSWERS_", &compiled_answers);
+    let json_request = r#"{
+        "operationName":null,
+        "variables":{},
+        "query": "_GRAPHQL_QUERY_"
+    }"#;
+    json_request.replace("_GRAPHQL_QUERY_", &mutation_query)
+}
+
 #[rocket::post("/submit", data = "<submission>")]
-pub fn submit(submission: LenientForm<QuizFormSubmission>) {
-    info!("{:#?}", submission);
+pub fn submit(
+    submission: LenientForm<QuizFormSubmission>,
+    app_state: State<AppState>,
+) -> Result<Html<String>, QuizdError> {
+    let identity = "sample_identity";
+    let start_time = Utc::now();
+    let finish_time = Utc::now();
+    let mutation_query =
+        create_mutation_query(identity, start_time, finish_time, submission.into_inner());
+
+    let client = reqwest::blocking::Client::new();
+
+    let res = client
+        .post(&app_state.api_url)
+        .body(mutation_query)
+        .header("Content-Type", "application/json")
+        .send()?
+        .text()?;
+
+    Ok(Html("ok".to_string()))
 }
