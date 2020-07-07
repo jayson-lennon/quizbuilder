@@ -83,14 +83,6 @@ impl MutationRoot {
         ))?)
     }
 
-    fn create_quiz_answer(
-        context: &Context,
-        quiz_answer: schema::QuizAnswerInput,
-    ) -> FieldResult<schema::QuizAnswer> {
-        let mut conn = smol::run(context.db_pool.acquire())?;
-        Ok(smol::run(db::quiz_answer::new(quiz_answer, &mut conn))?)
-    }
-
     fn change_quiz_answer(
         context: &Context,
         updated_answer: schema::QuizAnswerUpdate,

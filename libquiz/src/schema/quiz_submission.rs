@@ -1,5 +1,5 @@
 use crate::schema::QuizAnswer;
-use crate::types::id::{QuizId, SubmissionId};
+use crate::types::id::{OptionId, QuestionId, QuizId, SubmissionId};
 use chrono::{DateTime, Utc};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
@@ -21,4 +21,12 @@ pub struct QuizSubmissionInput {
     pub quiz_id: QuizId,
     pub start_date: DateTime<Utc>,
     pub finish_date: Option<DateTime<Utc>>,
+    pub answers: Vec<QuizSubmissionAnswerInput>,
+}
+
+#[derive(GraphQLInputObject, Debug)]
+#[graphql(description = "A new answer")]
+pub struct QuizSubmissionAnswerInput {
+    pub quiz_question_id: QuestionId,
+    pub quiz_option_id: OptionId,
 }

@@ -1,4 +1,4 @@
-use crate::schema::{QuizSubmission, QuizSubmissionInput};
+use crate::schema::{QuizAnswerInput, QuizSubmission, QuizSubmissionInput};
 use crate::types::id::{QuizId, SubmissionId};
 use sqlx::postgres::PgConnection;
 use uuid::Uuid;
@@ -18,8 +18,20 @@ pub async fn new(
         input.start_date,
         input.finish_date
     )
-    .execute(conn)
+    .execute(&mut *conn)
     .await?;
+
+    let mut answers = vec![];
+
+    for answer in input.answers.into_iter() {
+        let answer = QuizAnswerInput {
+            quiz_submission_id: id.into(),
+            quiz_question_id: answer.quiz_question_id,
+            quiz_option_id: answer.quiz_option_id,
+        };
+        let answer = super::quiz_answer::new(answer, conn).await?;
+        answers.push(answer);
+    }
 
     Ok(QuizSubmission {
         quiz_submission_id: id.into(),
@@ -27,7 +39,7 @@ pub async fn new(
         quiz_id: input.quiz_id,
         start_date: input.start_date,
         finish_date: input.finish_date,
-        answers: vec![],
+        answers,
     })
 }
 
