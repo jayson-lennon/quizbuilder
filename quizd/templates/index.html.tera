@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form method="POST" action="/submit">
+        {{__tera_context}}
+        <input type="hidden" value="{{quizId}}" name="quiz_id">
+        <label>Open Date: {{openDate}}</label>
+        <label>Close Date: {{closeDate}}</label>
+        <label>Duration: {{duration}}</label>
+        <h3>Questions</h3>
+        {% for question in questions %}
+        <label>Question {{loop.index}}:</label>
+        <p>{{question.questionData}}</p>
+        <ul>
+            {% for option in question.options %}
+            {% if option.optionType == "MultiChoice" %}
+            <li>
+                <label>
+                    {{option.optionData}}
+                    <input type="checkbox" value="{{question.quizQuestionId}}_{{option.quizOptionId}}" name="answer">
+                </label>
+            </li>
+            {% elif option.optionType == "SingleChoice" %}
+            <li>
+                <label>
+                    {{option.optionData}}
+                    <input type="radio" value="{{question.quizQuestionId}}_{{option.quizOptionId}}" name="answer">
+                </label>
+                {% endif %}
+                {% endfor %}
+        </ul>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+    </bo <input type="submit" value="Submit">
+
+</html>

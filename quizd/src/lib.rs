@@ -3,15 +3,14 @@
 #[macro_use]
 extern crate log;
 
-use handlebars::Handlebars;
+use tera::Tera;
 
 pub mod error;
 pub use error::QuizdError;
 
-pub mod handlebars_helpers;
 pub mod routes;
 
 pub struct AppState {
     pub api_url: String,
-    pub template_engine: Handlebars<'static>,
+    pub template_engine: Tera,
 }

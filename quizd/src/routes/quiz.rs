@@ -1,6 +1,11 @@
 use crate::{AppState, QuizdError};
-use rocket::response::content::Html;
-use rocket::State;
+use rocket::{
+    request::{FormItems, FromForm, LenientForm},
+    response::content::Html,
+    State,
+};
+use rocket_contrib::uuid::Uuid;
+use tera::Context;
 
 #[rocket::get("/q/<shortcode>")]
 pub fn get(shortcode: String, app_state: State<AppState>) -> Result<Html<String>, QuizdError> {
@@ -16,7 +21,7 @@ pub fn get(shortcode: String, app_state: State<AppState>) -> Result<Html<String>
     }
 
     let api_query = {
-        let graphql_query = r#""{ quizFromShortcode(shortcode:\"_SHORTCODE_\") { quizId, openDate, closeDate, duration, questions { quizQuestionId, position, questionData, options { quizOptionId, optionData, position } } } }""#;
+        let graphql_query = r#""{ quizFromShortcode(shortcode:\"_SHORTCODE_\") { quizId, openDate, closeDate, duration, questions { quizQuestionId, position, questionData, options { quizOptionId, optionData, position, optionType } } } }""#;
         let graphql_query = graphql_query.replace("_SHORTCODE_", &shortcode);
         let json_request = r#"{
                 "query": _GRAPHQL_QUERY_,
@@ -36,10 +41,76 @@ pub fn get(shortcode: String, app_state: State<AppState>) -> Result<Html<String>
         .text()?;
 
     let res: serde_json::Value = serde_json::from_str(&res)?;
-    println!("{:#?}", res);
-    println!("{:#?}", res["data"]["quizFromShortcode"]);
+    let data = res["data"]["quizFromShortcode"].clone();
+    let context = Context::from_value(data).expect("failed to convert api result into context");
+
     let template = app_state
         .template_engine
-        .render("index", &res["data"]["quizFromShortcode"])?;
+        .render("index.html.tera", &context)?;
     Ok(Html(template))
+}
+
+#[derive(Debug)]
+pub struct Answer {
+    question_id: Uuid,
+    option_id: Uuid,
+}
+
+#[derive(Debug)]
+pub struct QuizFormSubmission {
+    quiz_id: Uuid,
+    answers: Vec<Answer>,
+}
+
+impl<'f> FromForm<'f> for QuizFormSubmission {
+    // In practice, we'd use a more descriptive error type.
+    type Error = ();
+
+    fn from_form(items: &mut FormItems<'f>, strict: bool) -> Result<QuizFormSubmission, ()> {
+        use std::str::FromStr;
+
+        let mut quiz_id = None;
+        let mut answers = vec![];
+
+        // TODO: error handling
+        for item in items {
+            let key = item.key.url_decode().expect("failed to decode form key");
+            match key.as_str() {
+                "quiz_id" => {
+                    let quiz_id_as_str = item.value.url_decode().expect("failed to decode quiz id");
+                    quiz_id = Uuid::from_str(&quiz_id_as_str).ok();
+                }
+                "answer" => {
+                    let value = item
+                        .value
+                        .url_decode()
+                        .expect("failed to decode form value");
+                    let answer_pair: Vec<&str> = value.split('_').collect();
+                    if answer_pair.len() != 2 {
+                        panic!("wrong pair length");
+                    }
+                    let answer = Answer {
+                        question_id: Uuid::from_str(answer_pair[0])
+                            .expect("failed to parse question id"),
+                        option_id: Uuid::from_str(answer_pair[1])
+                            .expect("failed to parse option id"),
+                    };
+                    answers.push(answer);
+                }
+                _ => (),
+            }
+        }
+        match quiz_id {
+            Some(id) => Ok(QuizFormSubmission {
+                quiz_id: id,
+                answers,
+            }),
+            None => Err(()),
+        }
+    }
+}
+
+#[rocket::post("/submit", data = "<submission>")]
+pub fn submit(submission: LenientForm<QuizFormSubmission>) {
+    info!("{:#?}", submission);
 }

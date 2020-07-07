@@ -40,20 +40,8 @@ impl From<serde_json::Error> for QuizdError {
     }
 }
 
-impl From<handlebars::RenderError> for QuizdError {
-    fn from(error: handlebars::RenderError) -> Self {
-        QuizdError::TemplateError(format!("{}", error))
-    }
-}
-
-impl From<handlebars::TemplateError> for QuizdError {
-    fn from(error: handlebars::TemplateError) -> Self {
-        QuizdError::TemplateError(format!("{}", error))
-    }
-}
-
-impl From<handlebars::TemplateRenderError> for QuizdError {
-    fn from(error: handlebars::TemplateRenderError) -> Self {
+impl From<tera::Error> for QuizdError {
+    fn from(error: tera::Error) -> Self {
         QuizdError::TemplateError(format!("{}", error))
     }
 }

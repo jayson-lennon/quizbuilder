@@ -1,16 +1,14 @@
 #![feature(decl_macro, proc_macro_hygiene)]
 
 use dotenv::dotenv;
-use handlebars::Handlebars;
 use quizd::AppState;
 use rocket::config::Environment;
-use std::error::Error;
 use std::path::PathBuf;
 use structopt::StructOpt;
+use tera::Tera;
 
-/// A simple tool to test frontend code with faked API requests
 #[derive(StructOpt, Debug)]
-#[structopt(name = "spa-host")]
+#[structopt(name = "quizd")]
 struct Opt {
     /// URL for QuizApi
     #[structopt(
@@ -43,12 +41,14 @@ struct Opt {
     silent: bool,
 }
 
-fn init_template_engine(directory: PathBuf) -> Result<Handlebars<'static>, Box<dyn Error>> {
-    let mut engine = Handlebars::new();
-    engine.register_template_file("index", directory.join("index.hbs"))?;
-    engine.register_helper("print-obj", Box::new(quizd::handlebars_helpers::ObjPrinter));
-    engine.set_strict_mode(true);
-    Ok(engine)
+fn init_template_engine(directory: PathBuf) -> Result<Tera, tera::Error> {
+    Tera::new(
+        directory
+            .join("**")
+            .as_path()
+            .to_str()
+            .expect("Failed to convert path to string"),
+    )
 }
 
 fn main() {
@@ -80,6 +80,9 @@ fn main() {
 
     rocket::custom(rocket_config)
         .manage(app_state)
-        .mount("/", rocket::routes![routes::quiz::get])
+        .mount(
+            "/",
+            rocket::routes![routes::quiz::get, routes::quiz::submit],
+        )
         .launch();
 }
