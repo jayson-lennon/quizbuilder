@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <form method="POST" action="/submit">
+    <form method="POST" action="/submit_quiz">
         {{__tera_context}}
         <input type="hidden" value="{{quizId}}" name="quiz_id">
         <label>Open Date: {{openDate}}</label>
@@ -39,6 +39,7 @@
         {% endfor %}
         <input type="submit" value="Submit">
     </form>
-    </bo <input type="submit" value="Submit">
+
+</body>
 
 </html>

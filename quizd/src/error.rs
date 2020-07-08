@@ -18,6 +18,15 @@ pub enum QuizdError {
 
     #[error("shortcode validation error")]
     InvalidShortcode,
+
+    #[error("missing identity")]
+    MissingIdentity,
+
+    #[error("missing quiz start time")]
+    MissingQuizStartTime,
+
+    #[error("time parse error: {0}")]
+    TimeParseError(String),
 }
 
 impl<'r> Responder<'r> for QuizdError {
@@ -31,6 +40,12 @@ impl<'r> Responder<'r> for QuizdError {
 impl From<reqwest::Error> for QuizdError {
     fn from(error: reqwest::Error) -> Self {
         QuizdError::ApiError(format!("{}", error))
+    }
+}
+
+impl From<chrono::format::ParseError> for QuizdError {
+    fn from(error: chrono::format::ParseError) -> Self {
+        QuizdError::TimeParseError(format!("{}", error))
     }
 }
 

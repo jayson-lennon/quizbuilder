@@ -82,7 +82,12 @@ fn main() {
         .manage(app_state)
         .mount(
             "/",
-            rocket::routes![routes::quiz::get, routes::quiz::submit],
+            rocket::routes![
+                routes::gather_identity::get_identity,
+                routes::gather_identity::submit_identity,
+                routes::take_quiz::get_quiz,
+                routes::submit_quiz::submit,
+            ],
         )
         .launch();
 }

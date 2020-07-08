@@ -5,6 +5,8 @@ extern crate log;
 
 use tera::Tera;
 
+pub mod config;
+
 pub mod error;
 pub use error::QuizdError;
 
