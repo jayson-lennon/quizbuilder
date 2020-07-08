@@ -171,7 +171,7 @@ pub fn submit(
 
     let client = reqwest::blocking::Client::new();
 
-    let res = client
+    let _ = client
         .post(&app_state.api_url)
         .body(mutation_query)
         .header("Content-Type", "application/json")
