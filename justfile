@@ -1,8 +1,8 @@
 run bin:
-    cd {{bin}} && cargo +nightly run
+    cd backend/{{bin}} && cargo +nightly run
 
 build bin:
-    cd {{bin}} && cargo +nightly build
+    cd backend/{{bin}} && cargo +nightly build
 
 check:
-    cargo +nightly check
+    cd backend && cargo +nightly check
