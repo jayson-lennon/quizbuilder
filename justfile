@@ -1,5 +1,10 @@
 run bin:
-    cd backend/{{bin}} && cargo +nightly run
+    #!/bin/bash
+    if [ {{bin}} == "frontend" ]; then
+        cd frontend && elm reactor
+    else
+        cd backend/{{bin}} && cargo +nightly run
+    fi
 
 build bin:
     cd backend/{{bin}} && cargo +nightly build
