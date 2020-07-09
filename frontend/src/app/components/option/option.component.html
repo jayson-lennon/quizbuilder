@@ -1,0 +1,15 @@
+<div>
+  <input type="button" value="X" (click)="deleteOption()">
+  <input type="text" [value]="option.data" (input)="option.data = $event.target.value">
+
+  <label>
+    R
+    <input type="radio" name="optionType-{{option.id}}" value="radio">
+  </label>
+
+  <label>
+    C
+    <input type="radio" name="optionType-{{option.id}}" value="checkbox">
+  </label>
+
+</div>

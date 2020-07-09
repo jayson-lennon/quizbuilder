@@ -1,0 +1,13 @@
+<div *ngIf="question">
+  <input type="button" value="X" (click)="deleteQuestion()">
+  <input type="text" [value]="question.data" (input)="question.data = $event.target.value">
+  <br>
+  <br>
+  <div *ngIf="question.options">
+    <app-option *ngFor="let option of question.options" [option]="option"></app-option>
+  </div>
+  <input type="button" value="New Option" (click)="addOption()">
+</div>
+<br>
+<hr>
+<br>

@@ -1,7 +1,7 @@
 run bin:
     #!/bin/bash
     if [ {{bin}} == "frontend" ]; then
-        cd frontend && elm reactor
+        cd frontend && npm start
     else
         cd backend/{{bin}} && cargo +nightly run
     fi
