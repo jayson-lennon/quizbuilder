@@ -21,3 +21,6 @@ copy-frontend:
     rm -Rf backend/quizmgmtd/static
     rsync -ahxv frontend/dist/frontend/ backend/quizmgmtd/static
     mv backend/quizmgmtd/static/index.html backend/quizmgmtd/static/new_quiz.html
+
+sample-quizmgmt: (build "frontend") copy-frontend
+    just run quizmgmtd
