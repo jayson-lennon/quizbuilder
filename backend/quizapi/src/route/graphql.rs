@@ -31,3 +31,8 @@ pub fn post(
     let schema = schema.inner();
     request.execute_sync(schema, &context)
 }
+
+#[rocket::options("/graphql")]
+pub fn options() -> String {
+    "".to_owned()
+}

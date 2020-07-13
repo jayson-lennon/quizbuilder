@@ -1,6 +1,6 @@
 #![feature(decl_macro, proc_macro_hygiene)]
 
-use rocket::config::Environment;
+use rocket::{config::Environment, fairing::AdHoc, http::hyper::header};
 
 use dotenv::dotenv;
 use structopt::StructOpt;
@@ -62,6 +62,13 @@ fn main() {
     };
 
     rocket::custom(rocket_config)
+        .attach(AdHoc::on_response("Global CORS", |_, res| {
+            res.set_header(header::AccessControlAllowOrigin::Any);
+            res.set_raw_header(
+                "Access-Control-Allow-Headers",
+                "Origin, X-Requested-With, Content-Type, Accept",
+            );
+        }))
         .manage(db_pool)
         .manage(libquiz::schema::new())
         .manage(juniper_context)
@@ -72,6 +79,7 @@ fn main() {
                 route::graphql::graphql_playground,
                 route::graphql::get,
                 route::graphql::post,
+                route::graphql::options,
             ],
         )
         .launch();
