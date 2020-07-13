@@ -3,6 +3,10 @@
   <input type="text" [value]="option.data" (input)="option.data = $event.target.value">
 
   <label>
+    <input type="checkbox" name="is_correct" value="is_correct">
+  </label>
+
+  <label>
     R
     <input type="radio" name="optionType-{{option.id}}" value="radio">
   </label>

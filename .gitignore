@@ -11,3 +11,5 @@ backend/Cargo.lock
 
 # Dia backup and scratch files
 **/*.dia~
+
+backend/quizmgmtd/static/

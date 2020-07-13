@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <a href="/new_quiz">New Quiz</a>
+  <a href="/new_quiz.html">New Quiz</a>
   <br>
   <a href="/view_quizzes">View Quizzes</a>
 </body>
