@@ -31,6 +31,7 @@ export class QuestionComponent implements OnInit {
       data: '',
       type: 'Radio',
       id: uuidv4(),
+      isCorrect: false,
     });
   }
 

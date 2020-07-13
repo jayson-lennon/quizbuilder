@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Question } from './@types/question';
 import { GlobalEventService } from './services/global-event.service';
+import { FormControl, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -10,13 +11,26 @@ import { v4 as uuidv4 } from 'uuid';
 })
 
 export class AppComponent {
-  title = 'frontend';
 
   public questions: Question[] = [];
+
+  quizForm: FormGroup = new FormGroup({
+    title: new FormControl(''),
+    dateOpen: new FormControl(''),
+    duration: new FormControl(''),
+  });
+
+  private today(): string {
+    return new Date().toJSON().slice(0, 10);
+  }
 
   constructor(events: GlobalEventService) {
     events.deleteOption$.subscribe(id => this.deleteOption(id));
     events.deleteQuestion$.subscribe(id => this.deleteQuestion(id));
+
+    console.log('set date to ' + this.today());
+    this.quizForm.get('dateOpen').setValue(this.today());
+    this.quizForm.get('duration').setValue(1800);
   }
 
   public createNewQuestion(): void {
@@ -38,7 +52,16 @@ export class AppComponent {
     this.questions = this.questions.filter(question => question.id !== id);
   }
 
-  public submitQuiz(): void {
+  public generateApiRequest(): void {
+    const title = this.quizForm.get('title').value;
+    const dateOpen = this.quizForm.get('dateOpen').value;
+    const duration = this.quizForm.get('duration').value;
 
+  }
+
+  public submitQuiz(): void {
+    this.generateApiRequest();
+    console.log('struct:');
+    console.log(this.questions);
   }
 }

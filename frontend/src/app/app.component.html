@@ -1,9 +1,33 @@
 <router-outlet></router-outlet>
 
-<app-question *ngFor="let question of questions" [question]="question"></app-question>
+<form [formGroup]="quizForm" action="" (ngSubmit)="submitQuiz()">
 
-<input type="button" value="New Question" (click)="createNewQuestion()">
+  <input formControlName="title" id="title" type="text" placeholder="Quiz Title">
 
-<br>
+  <br>
 
-<input type="button" value="Submit Quiz" (click)="submitQuiz()">
+  <label>
+    Date Open
+    <input formControlName="dateOpen" type="date">
+  </label>
+
+  <br>
+
+  <label>
+    Duration (in seconds)
+    <input formControlName="duration" type="number" min="0" step="1" value="1800" placeholder="Duration"
+      name="duration">
+  </label>
+
+  <hr>
+
+  <app-question *ngFor="let question of questions" [question]="question"></app-question>
+
+  <input type="button" value="New Question" (click)="createNewQuestion()">
+
+  <br>
+  <br>
+
+  <input type="button" value="Submit Quiz" (click)="submitQuiz()">
+
+</form>

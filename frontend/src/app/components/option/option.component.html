@@ -3,17 +3,17 @@
   <input type="text" [value]="option.data" (input)="option.data = $event.target.value">
 
   <label>
-    <input type="checkbox" name="is_correct" value="is_correct">
+    <input type="checkbox" name="isCorrect" value="isCorrect" (input)="option.isCorrect = $event.target.checked">
   </label>
 
   <label>
     R
-    <input type="radio" name="optionType-{{option.id}}" value="radio">
+    <input type="radio" name="optionType-{{option.id}}" value="radio" (input)="option.type = 'Radio'" checked>
   </label>
 
   <label>
     C
-    <input type="radio" name="optionType-{{option.id}}" value="checkbox">
+    <input type="radio" name="optionType-{{option.id}}" value="checkbox" (input)="option.type = 'Checkbox'">
   </label>
 
 </div>
