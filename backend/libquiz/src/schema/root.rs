@@ -51,6 +51,16 @@ pub struct MutationRoot;
 
 #[juniper::graphql_object(Context = Context)]
 impl MutationRoot {
+    fn create_quiz_with_questions(
+        context: &Context,
+        quiz_input: schema::FullQuizInput,
+    ) -> FieldResult<schema::Quiz> {
+        let mut trans = smol::run(context.db_pool.begin())?;
+        let quiz = smol::run(db::quiz::new_with_questions(quiz_input, &mut trans))?;
+        let _ = smol::run(trans.commit())?;
+        Ok(quiz)
+    }
+
     fn create_quiz(context: &Context, quiz_input: schema::QuizInput) -> FieldResult<schema::Quiz> {
         let mut conn = smol::run(context.db_pool.acquire())?;
         Ok(smol::run(db::quiz::new(quiz_input, &mut conn))?)

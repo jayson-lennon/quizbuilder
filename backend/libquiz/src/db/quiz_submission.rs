@@ -86,7 +86,7 @@ pub async fn get_all(
         let sub = QuizSubmission {
             quiz_submission_id: submission_id,
             identity: sub.identity,
-            quiz_id: quiz_id,
+            quiz_id,
             start_date: sub.start_date,
             finish_date: sub.finish_date,
             answers: super::quiz_answer::get_all(submission_id, conn).await?,

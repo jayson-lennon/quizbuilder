@@ -1,4 +1,4 @@
-use crate::schema::QuizQuestion;
+use crate::schema::{FullQuizQuestionInput, QuizQuestion};
 use crate::types::id::{QuizId, UserId};
 use crate::types::time::Duration;
 use chrono::{DateTime, Utc};
@@ -26,4 +26,15 @@ pub struct QuizInput {
     pub open_date: DateTime<Utc>,
     pub close_date: Option<DateTime<Utc>>,
     pub duration: Option<Duration>,
+}
+
+#[derive(GraphQLInputObject, Debug)]
+#[graphql(description = "Full quiz input")]
+pub struct FullQuizInput {
+    pub name: Option<String>,
+    pub owner: UserId,
+    pub open_date: DateTime<Utc>,
+    pub close_date: Option<DateTime<Utc>>,
+    pub duration: Option<Duration>,
+    pub questions: Vec<FullQuizQuestionInput>,
 }

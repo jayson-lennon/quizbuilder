@@ -1,4 +1,4 @@
-use crate::schema::{Quiz, QuizInput};
+use crate::schema::{FullQuizInput, Quiz, QuizInput, QuizOptionInput, QuizQuestionInput};
 use crate::types::id::QuizId;
 use crate::types::time::Duration;
 use chrono::Utc;
@@ -63,12 +63,67 @@ pub async fn new(input: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx
         quiz_id: id.into(),
         name: input.name,
         owner: input.owner,
-        date_created: date_created,
+        date_created,
         open_date: input.open_date,
         close_date: input.close_date,
         duration: input.duration,
         shortcode,
         questions: vec![],
+    })
+}
+
+pub async fn new_with_questions(
+    input: FullQuizInput,
+    conn: &mut PgConnection,
+) -> Result<Quiz, sqlx::Error> {
+    let new_quiz_input = QuizInput {
+        name: input.name,
+        owner: input.owner,
+        open_date: input.open_date,
+        close_date: input.close_date,
+        duration: input.duration,
+    };
+
+    let quiz = new(new_quiz_input, &mut *conn).await?;
+
+    for question in input.questions.into_iter() {
+        let input = QuizQuestionInput {
+            quiz_id: quiz.quiz_id,
+            question_data: question.question_data,
+            position: question.position,
+        };
+
+        let question_id = {
+            super::quiz_question::new(input, &mut *conn)
+                .await?
+                .quiz_question_id
+        };
+
+        for option in question.options.into_iter() {
+            let input = QuizOptionInput {
+                quiz_question_id: question_id,
+                option_data: option.option_data,
+                is_correct: option.is_correct,
+                position: option.position,
+                option_type: option.option_type,
+            };
+
+            super::quiz_option::new(input, &mut *conn).await?;
+        }
+    }
+
+    let questions = super::quiz_question::get_all(quiz.quiz_id, conn).await?;
+
+    Ok(Quiz {
+        quiz_id: quiz.quiz_id,
+        name: quiz.name,
+        owner: quiz.owner,
+        date_created: quiz.date_created,
+        open_date: quiz.open_date,
+        close_date: quiz.close_date,
+        duration: quiz.duration,
+        shortcode: quiz.shortcode,
+        questions,
     })
 }
 

@@ -33,7 +33,7 @@ where
     fn from_input_value(v: &InputValue) -> Option<UserId> {
         v.as_string_value()
             .and_then(|s| Uuid::parse_str(s).ok())
-            .and_then(|id| Some(UserId(id)))
+            .map(|id| UserId(id))
     }
 
     fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
@@ -57,7 +57,7 @@ where
     fn from_input_value(v: &InputValue) -> Option<QuizId> {
         v.as_string_value()
             .and_then(|s| Uuid::parse_str(s).ok())
-            .and_then(|id| Some(QuizId(id)))
+            .map(|id| QuizId(id))
     }
 
     fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
@@ -81,7 +81,7 @@ where
     fn from_input_value(v: &InputValue) -> Option<QuestionId> {
         v.as_string_value()
             .and_then(|s| Uuid::parse_str(s).ok())
-            .and_then(|id| Some(QuestionId(id)))
+            .map(|id| QuestionId(id))
     }
 
     fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
@@ -105,7 +105,7 @@ where
     fn from_input_value(v: &InputValue) -> Option<OptionId> {
         v.as_string_value()
             .and_then(|s| Uuid::parse_str(s).ok())
-            .and_then(|id| Some(OptionId(id)))
+            .map(|id| OptionId(id))
     }
 
     fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {
@@ -129,7 +129,7 @@ where
     fn from_input_value(v: &InputValue) -> Option<SubmissionId> {
         v.as_string_value()
             .and_then(|s| Uuid::parse_str(s).ok())
-            .and_then(|id| Some(SubmissionId(id)))
+            .map(|id| SubmissionId(id))
     }
 
     fn from_str<'a>(value: juniper::parser::ScalarToken<'a>) -> juniper::ParseScalarResult<'a, S> {

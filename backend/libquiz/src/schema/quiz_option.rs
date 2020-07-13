@@ -104,3 +104,12 @@ pub struct QuizOptionInput {
     pub position: Option<i32>,
     pub option_type: QuizOptionType,
 }
+
+#[derive(GraphQLInputObject, Debug)]
+#[graphql(description = "New option as part of a full quiz")]
+pub struct FullQuizOptionInput {
+    pub option_data: String,
+    pub is_correct: bool,
+    pub position: Option<i32>,
+    pub option_type: QuizOptionType,
+}

@@ -1,4 +1,4 @@
-use crate::schema::QuizOption;
+use crate::schema::{FullQuizOptionInput, QuizOption};
 use crate::types::id::{QuestionId, QuizId};
 use juniper::{GraphQLInputObject, GraphQLObject};
 
@@ -18,4 +18,12 @@ pub struct QuizQuestionInput {
     pub quiz_id: QuizId,
     pub question_data: String,
     pub position: Option<i32>,
+}
+
+#[derive(GraphQLInputObject, Debug)]
+#[graphql(description = "New question as part of a full quiz")]
+pub struct FullQuizQuestionInput {
+    pub question_data: String,
+    pub position: Option<i32>,
+    pub options: Vec<FullQuizOptionInput>,
 }

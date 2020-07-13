@@ -29,7 +29,7 @@ pub async fn new(
         option_data: input.option_data,
         is_correct: input.is_correct,
         position: input.position,
-        option_type: input.option_type.into(),
+        option_type: input.option_type,
     })
 }
 
