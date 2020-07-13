@@ -2,5 +2,6 @@
 members = [
     "libquiz",
     "quizd",
+    "quizmgmtd",
     "quizapi"
 ]
