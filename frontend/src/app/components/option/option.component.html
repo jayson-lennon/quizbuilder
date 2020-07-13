@@ -8,12 +8,12 @@
 
   <label>
     R
-    <input type="radio" name="optionType-{{option.id}}" value="radio" (input)="option.type = 'Radio'" checked>
+    <input type="radio" name="optionType-{{option.id}}" value="radio" (input)="option.type = 'SingleChoice'" checked>
   </label>
 
   <label>
     C
-    <input type="radio" name="optionType-{{option.id}}" value="checkbox" (input)="option.type = 'Checkbox'">
+    <input type="radio" name="optionType-{{option.id}}" value="checkbox" (input)="option.type = 'MultiChoice'">
   </label>
 
 </div>

@@ -1,6 +1,6 @@
 export interface Option {
     data: string;
-    type: 'Radio' | 'Checkbox';
+    type: 'SingleChoice' | 'MultiChoice';
     id: string;
     isCorrect: boolean;
 }

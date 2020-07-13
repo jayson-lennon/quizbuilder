@@ -29,7 +29,7 @@ export class QuestionComponent implements OnInit {
 
     this.question.options.push({
       data: '',
-      type: 'Radio',
+      type: 'SingleChoice',
       id: uuidv4(),
       isCorrect: false,
     });
