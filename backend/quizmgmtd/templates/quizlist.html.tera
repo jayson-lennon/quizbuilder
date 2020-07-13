@@ -7,9 +7,9 @@
 </head>
 
 <body>
-  <a href="/new_quiz.html">New Quiz</a>
-  <br>
-  <a href="/quizlist">List Quizzes</a>
+  {% for quiz in quizzes %}
+  <a href="/quiz/{{quiz.shortcode}}">{{quiz.name}}</a><br>
+  {% endfor %}
 </body>
 
 </html>

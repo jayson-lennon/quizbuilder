@@ -79,7 +79,14 @@ fn main() {
 
     rocket::custom(rocket_config)
         .manage(app_state)
-        .mount("/", rocket::routes![routes::index::get,])
         .mount("/", StaticFiles::from("static"))
+        .mount(
+            "/",
+            rocket::routes![
+                routes::index::get,
+                routes::quizlist::get,
+                routes::quiz_detail::get
+            ],
+        )
         .launch();
 }
