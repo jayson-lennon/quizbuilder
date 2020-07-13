@@ -41,7 +41,7 @@ pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sql
 }
 
 pub async fn get_all(conn: &mut PgConnection) -> Result<Vec<Quiz>, sqlx::Error> {
-    let quiz_ids = sqlx::query!("SELECT quiz_id FROM quizzes",)
+    let quiz_ids = sqlx::query!("SELECT quiz_id FROM quizzes ORDER BY date_created DESC",)
         .fetch_all(&mut *conn)
         .await?;
 
