@@ -40,6 +40,20 @@ pub async fn find_by_id(id: QuizId, conn: &mut PgConnection) -> Result<Quiz, sql
     })
 }
 
+pub async fn get_all(conn: &mut PgConnection) -> Result<Vec<Quiz>, sqlx::Error> {
+    let quiz_ids = sqlx::query!("SELECT quiz_id FROM quizzes",)
+        .fetch_all(&mut *conn)
+        .await?;
+
+    let mut quizzes = vec![];
+    for id in quiz_ids.iter().map(|data| data.quiz_id) {
+        let quiz = find_by_id(id.into(), conn).await?;
+        quizzes.push(quiz);
+    }
+
+    Ok(quizzes)
+}
+
 pub async fn new(input: QuizInput, conn: &mut PgConnection) -> Result<Quiz, sqlx::Error> {
     let id = Uuid::new_v4();
     let shortcode = gen_shortcode(&ShortCodeOptions::default());

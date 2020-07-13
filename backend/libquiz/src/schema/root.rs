@@ -22,6 +22,12 @@ impl QueryRoot {
         Ok(smol::run(db::quiz::find_by_id(quiz_id, &mut conn))?)
     }
 
+    #[graphql(description = "View all quizzes")]
+    fn get_all_quizzes(context: &Context) -> Result<Vec<schema::Quiz>, FieldError> {
+        let mut conn = smol::run(context.db_pool.acquire())?;
+        Ok(smol::run(db::quiz::get_all(&mut conn))?)
+    }
+
     #[graphql(description = "Get all Submissions by Quiz ID")]
     fn quiz_from_shortcode(context: &Context, shortcode: String) -> FieldResult<schema::Quiz> {
         let mut conn = smol::run(context.db_pool.acquire())?;
