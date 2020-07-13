@@ -31,7 +31,8 @@
             <li>
                 <label>
                     {{option.optionData}}
-                    <input type="radio" value="{{question.quizQuestionId}}_{{option.quizOptionId}}" name="answer">
+                    <input type="radio" value="{{question.quizQuestionId}}_{{option.quizOptionId}}"
+                        name="answer-{{question.quizQuestionId}}">
                 </label>
                 {% endif %}
                 {% endfor %}
