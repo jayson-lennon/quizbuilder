@@ -1,0 +1,5 @@
+[development]
+secret_key = "TsjDLWmMqhgDOoSNlpQ4Ys0I4WXo5z3BeNyN1HhJmiU="
+
+[production]
+secret_key = "S5yhHO3E9zq2mBacM/nynmqU4SU9sunhSF1d1KHSYes="
