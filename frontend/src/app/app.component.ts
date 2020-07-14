@@ -17,6 +17,7 @@ export class AppComponent {
 
   quizForm: FormGroup = new FormGroup({
     title: new FormControl(''),
+    owner: new FormControl(''),
     dateOpen: new FormControl(''),
     timeOpen: new FormControl(''),
     duration: new FormControl(''),
@@ -59,6 +60,7 @@ export class AppComponent {
     const dateOpen = this.quizForm.get('dateOpen').value;
     const timeOpen = this.quizForm.get('timeOpen').value;
     const duration = this.quizForm.get('duration').value;
+    const owner = this.quizForm.get('owner').value;
     console.log('time open = ' + timeOpen);
 
     const questions = this.questions.map((q) => {
@@ -69,7 +71,7 @@ export class AppComponent {
       return `{questionData: \"${q.data}\", options: [${options}]}`;
     });
 
-    const quizInput = `{name: \"${title}\", owner: \"276b50a8-20c8-4834-965f-0ea965a577a5\", openDate: \"${dateOpen} ${timeOpen}.000Z\", duration: \"${duration}\", questions: [${questions}]}`;
+    const quizInput = `{name: \"${title}\", owner: \"${owner}\", openDate: \"${dateOpen} ${timeOpen}.000Z\", duration: \"${duration}\", questions: [${questions}]}`;
 
     const query = {
       operationName: null,

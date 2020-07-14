@@ -35,7 +35,14 @@ impl<'f> FromForm<'f> for QuizFormSubmission {
 
         // TODO: error handling
         for item in items {
-            let key = item.key.url_decode().expect("failed to decode form key");
+            let key = {
+                let decoded = item.key.url_decode().expect("failed to decode form key");
+                if decoded.contains("-") {
+                    decoded.split("-").collect::<Vec<_>>()[0].to_owned()
+                } else {
+                    decoded.to_owned()
+                }
+            };
             match key.as_str() {
                 "quiz_id" => {
                     let quiz_id_as_str = item.value.url_decode().expect("failed to decode quiz id");

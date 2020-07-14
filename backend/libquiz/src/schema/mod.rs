@@ -15,3 +15,6 @@ pub use quiz_submission::{QuizSubmission, QuizSubmissionInput};
 
 mod quiz_answer;
 pub use quiz_answer::{QuizAnswer, QuizAnswerInput, QuizAnswerUpdate};
+
+mod quiz_score;
+pub use quiz_score::QuizScore;

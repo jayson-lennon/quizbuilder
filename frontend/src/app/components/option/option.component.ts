@@ -14,6 +14,7 @@ export class OptionComponent implements OnInit {
   constructor(private eventService: GlobalEventService) { }
 
   ngOnInit(): void {
+    this.option.type = 'SingleChoice';
   }
 
   public deleteOption(): void {

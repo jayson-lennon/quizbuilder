@@ -17,7 +17,7 @@ macro_rules! impl_from_uuid {
     };
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UserId(pub Uuid);
 impl_from_uuid!(UserId);
 
@@ -41,7 +41,7 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct QuizId(pub Uuid);
 impl_from_uuid!(QuizId);
 
@@ -65,7 +65,7 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct QuestionId(pub Uuid);
 impl_from_uuid!(QuestionId);
 
@@ -89,7 +89,7 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OptionId(pub Uuid);
 impl_from_uuid!(OptionId);
 
@@ -113,7 +113,7 @@ where
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SubmissionId(pub Uuid);
 impl_from_uuid!(SubmissionId);
 

@@ -2,6 +2,10 @@
 
 <form [formGroup]="quizForm" action="" (ngSubmit)="submitQuiz()">
 
+  <input formControlName="owner" id="owner" type="text" placeholder="User ID">
+
+  <br>
+
   <input formControlName="title" id="title" type="text" placeholder="Quiz Title">
 
   <br>

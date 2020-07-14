@@ -6,14 +6,4 @@
     <input type="checkbox" name="isCorrect" value="isCorrect" (input)="option.isCorrect = $event.target.checked">
   </label>
 
-  <label>
-    R
-    <input type="radio" name="optionType-{{option.id}}" value="radio" (input)="option.type = 'SingleChoice'" checked>
-  </label>
-
-  <label>
-    C
-    <input type="radio" name="optionType-{{option.id}}" value="checkbox" (input)="option.type = 'MultiChoice'">
-  </label>
-
 </div>

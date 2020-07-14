@@ -16,6 +16,15 @@ pub struct QueryRoot;
 
 #[juniper::graphql_object(Context = Context)]
 impl QueryRoot {
+    #[graphql(description = "Get scores for a quiz")]
+    fn quiz_score(
+        context: &Context,
+        quiz_id: QuizId,
+    ) -> Result<Vec<schema::QuizScore>, FieldError> {
+        let mut conn = smol::run(context.db_pool.acquire())?;
+        Ok(smol::run(db::quiz_score::get_all(quiz_id, &mut conn))?)
+    }
+
     #[graphql(description = "Get a Quiz by ID")]
     fn quiz(context: &Context, quiz_id: QuizId) -> Result<schema::Quiz, FieldError> {
         let mut conn = smol::run(context.db_pool.acquire())?;
@@ -60,7 +69,7 @@ impl MutationRoot {
     fn create_quiz_with_questions(
         context: &Context,
         quiz_input: schema::FullQuizInput,
-    ) -> FieldResult<schema::Quiz> {
+    ) -> Result<schema::Quiz, FieldError> {
         let mut trans = smol::run(context.db_pool.begin())?;
         let quiz = smol::run(db::quiz::new_with_questions(quiz_input, &mut trans))?;
         let _ = smol::run(trans.commit())?;
