@@ -4,6 +4,7 @@ import { Question } from './@types/question';
 import { GlobalEventService } from './services/global-event.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
+import { Quiz } from './@types/quiz';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,6 @@ export class AppComponent {
     events.deleteOption$.subscribe(id => this.deleteOption(id));
     events.deleteQuestion$.subscribe(id => this.deleteQuestion(id));
 
-    console.log('set date to ' + this.today());
     this.quizForm.get('dateOpen').setValue(this.today());
     this.quizForm.get('duration').setValue(1800);
   }
@@ -42,7 +42,6 @@ export class AppComponent {
       options: [],
       id: uuidv4(),
     });
-    console.log('there are ' + this.questions.length + ' questions');
   }
 
   public deleteOption(id: string): void {
@@ -55,17 +54,15 @@ export class AppComponent {
     this.questions = this.questions.filter(question => question.id !== id);
   }
 
-  public generateApiRequest(): void {
+  public generateApiRequest(): object {
     const title = this.quizForm.get('title').value;
     const dateOpen = this.quizForm.get('dateOpen').value;
     const timeOpen = this.quizForm.get('timeOpen').value;
     const duration = this.quizForm.get('duration').value;
     const owner = this.quizForm.get('owner').value;
-    console.log('time open = ' + timeOpen);
 
     const questions = this.questions.map((q) => {
       const options = q.options.map((op) => {
-        console.log('w');
         return `{optionData: \"${op.data}\", isCorrect: ${op.isCorrect}, optionType: \"${op.type}\"}`;
       }).join(',');
       return `{questionData: \"${q.data}\", options: [${options}]}`;
@@ -79,13 +76,14 @@ export class AppComponent {
       variables: {}
     };
 
-    this.http.post('http://localhost:8001/graphql', query).subscribe(response => { });
+    return query;
 
   }
 
   public submitQuiz(): void {
-    this.generateApiRequest();
-    console.log('struct:');
-    console.log(this.questions);
+    const request = this.generateApiRequest();
+    const response = this.http.post('http://localhost:8001/graphql', request).subscribe((response: any) => {
+      window.location.href = `http://localhost:8002/quiz/${response.data.createQuizWithQuestions.shortcode}`;
+    });
   }
 }

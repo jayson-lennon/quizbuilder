@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Option } from '../../@types/option';
 import { GlobalEventService } from '../../services/global-event.service';
 
@@ -10,11 +10,16 @@ import { GlobalEventService } from '../../services/global-event.service';
 export class OptionComponent implements OnInit {
 
   @Input() public option: Option;
+  @ViewChild('optionInput') optionInput: ElementRef;
 
   constructor(private eventService: GlobalEventService) { }
 
   ngOnInit(): void {
     this.option.type = 'SingleChoice';
+  }
+
+  ngAfterViewInit() {
+    this.optionInput.nativeElement.focus();
   }
 
   public deleteOption(): void {

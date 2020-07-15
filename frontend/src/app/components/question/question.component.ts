@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { Question } from '../../@types/question';
 import { v4 as uuidv4 } from 'uuid';
 import { GlobalEventService } from 'src/app/services/global-event.service';
@@ -11,11 +11,15 @@ import { GlobalEventService } from 'src/app/services/global-event.service';
 export class QuestionComponent implements OnInit {
 
   @Input() public question: Question;
+  @ViewChild('questionInput') questionInput: ElementRef;
 
   constructor(private eventService: GlobalEventService) { }
 
   ngOnInit(): void {
-    console.log('question=' + this.question);
+  }
+
+  ngAfterViewInit() {
+    this.questionInput.nativeElement.focus();
   }
 
   public deleteQuestion(): void {

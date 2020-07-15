@@ -1,6 +1,6 @@
 <div *ngIf="question">
   <input type="button" value="X" (click)="deleteQuestion()">
-  <input type="text" [value]="question.data" (input)="question.data = $event.target.value">
+  <input type="text" #questionInput [value]="question.data" (input)="question.data = $event.target.value">
   <br>
   <br>
   <div *ngIf="question.options">

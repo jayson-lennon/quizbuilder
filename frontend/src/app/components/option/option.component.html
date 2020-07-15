@@ -1,6 +1,6 @@
 <div>
   <input type="button" value="X" (click)="deleteOption()">
-  <input type="text" [value]="option.data" (input)="option.data = $event.target.value">
+  <input type="text" #optionInput [value]="option.data" (input)="option.data = $event.target.value">
 
   <label>
     <input type="checkbox" name="isCorrect" value="isCorrect" (input)="option.isCorrect = $event.target.checked">
