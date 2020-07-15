@@ -23,4 +23,5 @@ copy-frontend:
     mv backend/quizmgmtd/static/index.html backend/quizmgmtd/static/new_quiz.html
 
 sample-quizmgmt: (build "frontend") copy-frontend
+    cp backend/quizmgmtd/wwwroot/main.css backend/quizmgmtd/static/main.css
     just run quizmgmtd

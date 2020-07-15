@@ -85,7 +85,8 @@ fn main() {
             rocket::routes![
                 routes::index::get,
                 routes::quizlist::get,
-                routes::quiz_detail::get
+                routes::quiz_detail::get_questions,
+                routes::quiz_detail::index,
             ],
         )
         .launch();

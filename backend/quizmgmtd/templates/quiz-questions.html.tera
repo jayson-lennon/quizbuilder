@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "header.html" %}
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="quiz-detail-grid">
+    <div class="bold">Title</div>
+    <div>{{quiz.name}}</div>
+
+    <div class="bold">Short Code</div>
+    <div>{{quiz.shortcode}}</div>
+
+    <div class="bold">Created</div>
+    <div>{{quiz.dateCreated}}</div>
+
+    <div class="bold">Opened</div>
+    <div>{{quiz.openDate}}</div>
+
+    <div class="bold">Closed</div>
+    <div>{{quiz.closeDate}}</div>
+
+    <div class="bold">Duration</div>
+    <div>{{quiz.duration | int / 60}} minutes</div>
+  </div>
+
+  <hr>
+
+  {% if quiz.questions | length == 0 %}
+  <div class="bold">There are no questions for this quiz.</div>
+  {% endif %}
+
+  {% for question in quiz.questions %}
+  <div class="question-title">{{loop.index}}: {{question.questionData}}</div>
+
+  {% if question.options | length == 0 %}
+  <div class="bold">There are no options for this quiz.</div>
+  {% endif %}
+
+  {% for option in question.options %}
+
+  {% if option.isCorrect == true %}
+  <div class="option option-correct">{{option.optionData}}</div>
+  {% else %}
+  <div class="option">{{option.optionData}}</div>
+  {% endif %}
+
+  {% endfor %}
+  <br>
+  {% endfor %}
+
+</body>
+
+</html>

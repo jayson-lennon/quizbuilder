@@ -19,9 +19,10 @@ impl QueryRoot {
     #[graphql(description = "Get scores for a quiz")]
     fn quiz_score(
         context: &Context,
-        quiz_id: QuizId,
+        shortcode: String,
     ) -> Result<Vec<schema::QuizScore>, FieldError> {
         let mut conn = smol::run(context.db_pool.acquire())?;
+        let quiz_id = smol::run(db::quiz::from_shortcode(&shortcode, &mut conn))?.quiz_id;
         Ok(smol::run(db::quiz_score::get_all(quiz_id, &mut conn))?)
     }
 

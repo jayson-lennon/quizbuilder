@@ -9,7 +9,6 @@
 
 <body>
     <form method="POST" action="/submit_quiz">
-        {{__tera_context}}
         <input type="hidden" value="{{quizId}}" name="quiz_id">
         <label>Open Date: {{openDate}}</label>
         <label>Close Date: {{closeDate}}</label>
