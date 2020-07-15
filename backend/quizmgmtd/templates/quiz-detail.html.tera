@@ -19,7 +19,7 @@
     <tbody>
       {% for score in scores %}
       <tr>
-        <td>{{score.submission.identity}}</td>
+        <td><a href="/quiz/submission/{{score.submission.quizSubmissionId}}">{{score.submission.identity}}</a></td>
         <td class="quiz-score-total">{{score.totalCorrect}}</td>
       </tr>
       {% endfor %}

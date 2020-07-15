@@ -3,6 +3,7 @@ use rocket::{
     request::Request,
     response::{self, Responder, Response},
 };
+use rocket_contrib::uuid;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -27,6 +28,9 @@ pub enum QuizMgmtdError {
 
     #[error("time parse error: {0}")]
     TimeParseError(String),
+
+    #[error("UUID parse error:{0}")]
+    UuidError(String),
 }
 
 impl<'r> Responder<'r> for QuizMgmtdError {
@@ -58,5 +62,11 @@ impl From<serde_json::Error> for QuizMgmtdError {
 impl From<tera::Error> for QuizMgmtdError {
     fn from(error: tera::Error) -> Self {
         QuizMgmtdError::TemplateError(format!("{}", error))
+    }
+}
+
+impl From<uuid::ParseError> for QuizMgmtdError {
+    fn from(error: uuid::ParseError) -> Self {
+        QuizMgmtdError::UuidError(format!("{}", error))
     }
 }

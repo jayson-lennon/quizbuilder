@@ -87,6 +87,7 @@ fn main() {
                 routes::quizlist::get,
                 routes::quiz_detail::get_questions,
                 routes::quiz_detail::index,
+                routes::submission::get,
             ],
         )
         .launch();
