@@ -4,7 +4,6 @@ import { Question } from './@types/question';
 import { GlobalEventService } from './services/global-event.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
-import { Quiz } from './@types/quiz';
 
 @Component({
   selector: 'app-root',
