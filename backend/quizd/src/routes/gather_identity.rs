@@ -40,7 +40,7 @@ pub fn submit_identity(submission: Form<IdentityInfo>, mut cookies: Cookies) -> 
 
     let quiz_start_time = Utc::now().to_rfc3339_opts(SecondsFormat::Millis, true);
     let mut quiz_start_cookie = Cookie::new(QUIZ_START_TIME_COOKIE, quiz_start_time);
-    quiz_start_cookie.set_secure(true);
+    //quiz_start_cookie.set_secure(true);
 
     cookies.add_private(quiz_start_cookie);
 
