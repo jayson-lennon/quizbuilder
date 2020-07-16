@@ -38,6 +38,33 @@ fn quiz_from_id(
     Ok(res["data"]["quiz"].clone())
 }
 
+fn apply_answers(quiz: &mut serde_json::Value, submission: &serde_json::Value) {
+    let questions = quiz["questions"]
+        .as_array_mut()
+        .expect("failed to get quiz questions array");
+    let answers = submission["answers"]
+        .as_array()
+        .expect("failed to get submission answer array");
+
+    for question in questions {
+        let options = question["options"]
+            .as_array_mut()
+            .expect("failed to get option array");
+        for option in options {
+            option["marked"] = serde_json::Value::Bool(false);
+            for answer in answers {
+                if option["quizOptionId"]
+                    .as_str()
+                    .expect("failed to get quiz option id")
+                    == answer["quizOptionId"]
+                {
+                    option["marked"] = serde_json::Value::Bool(true);
+                }
+            }
+        }
+    }
+}
+
 #[rocket::get("/quiz/submission/<submission_id>")]
 pub fn get(
     submission_id: Uuid,
@@ -45,7 +72,9 @@ pub fn get(
 ) -> Result<Html<String>, QuizMgmtdError> {
     let submission = submission_details(submission_id, &app_state)?;
     let quiz_id = Uuid::from_str(submission["quizId"].as_str().unwrap_or_else(|| ""))?;
-    let quiz = quiz_from_id(quiz_id, &app_state)?;
+    let mut quiz = quiz_from_id(quiz_id, &app_state)?;
+
+    apply_answers(&mut quiz, &submission);
 
     let mut context = Context::new();
     context.insert("quiz", &quiz);
@@ -53,7 +82,7 @@ pub fn get(
 
     let template = app_state
         .template_engine
-        .render("quiz-submission.html.tera", &context)?;
+        .render("quiz-submission.tera", &context)?;
 
     Ok(Html(template))
 }

@@ -1,8 +1,24 @@
+html {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  background-attachment: fixed;
+  height: 100%;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 .quiz-detail-grid {
   display: grid;
   grid-template-columns: max-content auto;
   column-gap: 10px;
   row-gap: 5px;
+  align-items: center;
 }
 
 .bold {
@@ -17,12 +33,24 @@
 }
 
 .option-correct {
-  background: #d2ecff;
+  border: 3px solid black;
+}
+
+.submission-correct {
+  background: #a5cfff;
+}
+
+.submission-incorrect {
+  background: #ff9494;
 }
 
 .quiz-score-table {
   border: none;
   border-collapse: collapse;
+}
+
+.question-title {
+  font-weight: bold;
 }
 
 th {

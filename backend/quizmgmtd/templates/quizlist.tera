@@ -8,7 +8,7 @@
 
 <body>
   {% for quiz in quizzes %}
-  <a href="/quiz/{{quiz.shortcode}}">{{quiz.name}}</a><br>
+    <a href="/quiz/{{quiz.shortcode}}">{{quiz.name}}</a><br>
   {% endfor %}
 </body>
 

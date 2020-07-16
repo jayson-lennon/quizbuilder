@@ -61,7 +61,7 @@ pub fn get_questions(
 
     let template = app_state
         .template_engine
-        .render("quiz-questions.html.tera", &context)?;
+        .render("quiz-questions.tera", &context)?;
 
     Ok(Html(template))
 }
@@ -80,7 +80,7 @@ pub fn index(
 
     let template = app_state
         .template_engine
-        .render("quiz-detail.html.tera", &context)?;
+        .render("quiz-detail.tera", &context)?;
 
     Ok(Html(template))
 }

@@ -75,9 +75,7 @@ pub fn get_quiz(
         Context::from_value(quiz_data).expect("failed to convert api result into context");
     context.insert(IDENTITY_COOKIE, &identity);
 
-    let template = app_state
-        .template_engine
-        .render("quiz.html.tera", &context)?;
+    let template = app_state.template_engine.render("quiz.tera", &context)?;
 
     Ok(TakeQuizResponse::Template(Html(template)))
 }

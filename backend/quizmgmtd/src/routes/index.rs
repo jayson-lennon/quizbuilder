@@ -7,9 +7,7 @@ use crate::{error::QuizMgmtdError, AppState};
 pub fn get(app_state: State<AppState>) -> Result<Html<String>, QuizMgmtdError> {
     let context = Context::new();
 
-    let template = app_state
-        .template_engine
-        .render("index.html.tera", &context)?;
+    let template = app_state.template_engine.render("index.tera", &context)?;
 
     Ok(Html(template))
 }

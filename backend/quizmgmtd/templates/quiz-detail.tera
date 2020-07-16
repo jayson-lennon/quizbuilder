@@ -8,6 +8,8 @@
 
 <body>
 
+  <a href="http://localhost:8000/q/{{quiz.shortcode}}">Link to quiz</a>
+  <br>
   <a href="/quiz/questions/{{quiz.shortcode}}">View Questions</a>
 
   <h2>Scores</h2>

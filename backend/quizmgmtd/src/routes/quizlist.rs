@@ -25,7 +25,7 @@ pub fn get(app_state: State<AppState>) -> Result<Html<String>, QuizMgmtdError> {
 
     let template = app_state
         .template_engine
-        .render("quizlist.html.tera", &context)?;
+        .render("quizlist.tera", &context)?;
 
     Ok(Html(template))
 }

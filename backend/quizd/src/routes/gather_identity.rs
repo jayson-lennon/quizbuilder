@@ -20,9 +20,7 @@ pub fn get_identity(
     let mut context = Context::new();
     context.insert("quiz_shortcode", &shortcode);
 
-    let template = app_state
-        .template_engine
-        .render("landing.html.tera", &context)?;
+    let template = app_state.template_engine.render("landing.tera", &context)?;
 
     Ok(Html(template))
 }

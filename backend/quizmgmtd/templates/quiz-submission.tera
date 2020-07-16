@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "header.html" %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="quiz-detail-grid">
+    <div class="bold">Quiz</div>
+    <div>{{quiz.name}}</div>
+
+    <div class="bold">Identity</div>
+    <div>{{submission.identity}}</div>
+
+    <div class="bold">Start</div>
+    <div>{{submission.startDate}}</div>
+
+    <div class="bold">Finish</div>
+    <div>{{submission.finishDate}}</div>
+  </div>
+
+  {% if quiz.questions | length == 0 %}
+    <div class="bold">There are no questions for this quiz.</div>
+  {% endif %}
+
+  {% for question in quiz.questions %}
+    <div class="question-title"><hr>{{loop.index}}: {{question.questionData}}</div>
+
+    {% if question.options | length == 0 %}
+      <div class="bold">There are no options for this quiz.</div>
+    {% endif %}
+
+    {% for option in question.options %}
+
+      {% set option_submission_style = "" %}
+      {% set option_style = "" %}
+
+      {% if option.isCorrect == true %}
+        {% set option_style = "option-correct" %}
+        {% if option.marked == true %}
+          {% set option_submission_style = "submission-correct" %}
+        {% endif %}
+      {% else %}
+        {% if option.marked == true %}
+          {% set option_submission_style = "submission-incorrect" %}
+        {% endif %}
+      {% endif %}
+
+      <div class="option {{option_style}} {{option_submission_style}}">{{option.optionData}}</div>
+
+    {% endfor %}
+    <br>
+  {% endfor %}
+</body>
+
+</html>
