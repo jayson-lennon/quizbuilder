@@ -21,8 +21,8 @@
     <tbody>
       {% for score in scores %}
       <tr>
-        <td><a href="/quiz/submission/{{score.submission.quizSubmissionId}}">{{score.submission.identity}}</a></td>
-        <td class="quiz-score-total">{{score.totalCorrect}}</td>
+        <td class="clickable" onclick="window.location='/quiz/submission/{{score.submission.quizSubmissionId}}'"><a href="/quiz/submission/{{score.submission.quizSubmissionId}}">{{score.submission.identity}}</a></td>
+        <td class="clickable quiz-score-total" onclick="window.location='/quiz/submission/{{score.submission.quizSubmissionId}}'">{{score.totalCorrect}}</td>
       </tr>
       {% endfor %}
     </tbody>

@@ -13,3 +13,4 @@ backend/Cargo.lock
 **/*.dia~
 
 backend/quizmgmtd/static
+backend/quizd/static

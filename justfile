@@ -1,4 +1,4 @@
-run bin:
+run bin: copy-styles
     #!/bin/bash
     if [ {{bin}} == "frontend" ]; then
         cd frontend && npm start
@@ -24,6 +24,7 @@ copy-frontend:
 
 copy-styles:
     cp backend/quizmgmtd/wwwroot/main.css backend/quizmgmtd/static/main.css
+    cp backend/quizd/wwwroot/main.css backend/quizd/static/main.css
 
 sample-quizmgmt: (build "frontend") copy-frontend copy-styles
     just run quizmgmtd

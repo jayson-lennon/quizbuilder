@@ -1,6 +1,9 @@
 html {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   font-size: 14px;
   background-attachment: fixed;
   height: 100%;
@@ -13,8 +16,8 @@ html {
 .quiz-detail-grid {
   display: grid;
   grid-template-columns: max-content auto;
-  column-gap: 10px;
-  row-gap: 5px;
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
   align-items: center;
 }
 
@@ -30,16 +33,14 @@ html {
 }
 
 .option-correct {
-  background: #a5cfff;
+  border: 3px solid black;
 }
 
 .submission-correct {
-  border: 3px solid black;
   background: #a5cfff;
 }
 
 .submission-incorrect {
-  border: 3px solid black;
   background: #ff9494;
 }
 
@@ -69,6 +70,10 @@ tr:nth-child(even) {
   text-align: center;
 }
 
-.clickable {
+.choice {
+  display: flex;
+  padding: 5px;
+  margin: 5px;
+  background: #fbfbfb;
   cursor: pointer;
 }

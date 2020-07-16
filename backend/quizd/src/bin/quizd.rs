@@ -3,6 +3,7 @@
 use dotenv::dotenv;
 use quizd::AppState;
 use rocket::config::Environment;
+use rocket_contrib::serve::StaticFiles;
 use std::path::PathBuf;
 use structopt::StructOpt;
 use tera::Tera;
@@ -80,6 +81,7 @@ fn main() {
 
     rocket::custom(rocket_config)
         .manage(app_state)
+        .mount("/", StaticFiles::from("static"))
         .mount(
             "/",
             rocket::routes![
